@@ -135,12 +135,13 @@ exports.init = function(instance, opts, store) {
           var closer = this
 
           if( !store.closed$ ) {
-            cmdfunc.call(closer,close_args,function(err){
-              if( err ) closer.log.error('close-error',close_args,err);
-
+            try {
+              await cmdfunc.call(closer,close_args);
+            } catch (err) {
+              closer.log.error('close-error',close_args,err);
               store.closed$ = true
               await closer.prior(close_args)
-            })
+            }
           }
           else return await closer.prior(close_args);
         })
