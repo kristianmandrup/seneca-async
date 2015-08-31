@@ -2,22 +2,15 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
 var util = require('util')
-
 var _ = require('lodash')
-
 var error = require('eraro')({
   package:  'seneca',
   msgmap:   ERRMSGMAP(),
   override: true
 })
-
 var common = require('./common')
-
 var noop = common.noop
-
-
 
 function Entity( canon, seneca ) {
   var self = this
@@ -47,6 +40,7 @@ function Entity( canon, seneca ) {
   // use as a quick test to identify Entity objects
   // returns compact string zone/base/name
   self.entity$ = self.canon$()
+  return self;
 }
 
 
@@ -85,7 +79,6 @@ Entity.prototype.make$ = function() {
   while(args.length < 3 ) {
     args.unshift(null)
   }
-
 
   if( _.isString(props.entity$) ) {
     canon = parsecanon(props.entity$)
@@ -134,11 +127,9 @@ Entity.prototype.make$ = function() {
     }
   }
 
-
   if( props.hasOwnProperty('id$') ) {
     entity.id$ = props.id$
   }
-
 
   var entopts = self.private$.seneca.options().entity || {}
   if( entopts.hide ) {
@@ -150,108 +141,88 @@ Entity.prototype.make$ = function() {
     })
   }
 
-
   self.log$('make',entity.canon$({string:true}),entity)
   return entity
 }
 
-
 // save one
-Entity.prototype.save$ = function(props,cb) {
+Entity.prototype.save$ = async function(props) {
   var self = this
   var si   = self.private$.seneca
 
-  if( _.isFunction(props) ) {
-    cb = props
-  }
   else if( _.isObject(props) ) {
     self.data$(props)
   }
 
-  si.act( self.private$.entargs({cmd:'save'}),cb)
+  // make async!
+  await si.act( self.private$.entargs({cmd:'save'}))
   return self
 }
 
-
-
 // provide native database driver
-Entity.prototype.native$ = function(cb) {
+Entity.prototype.native$ = async function() {
   var self = this
   var si   = self.private$.seneca
 
-  si.act( self.private$.entargs({cmd:'native'}),cb||noop)
+  await si.act( self.private$.entargs({cmd:'native'}))
   return self
 }
-
-
 
 // load one
 // TODO: qin can be an entity, in which case, grab the id and reload
 // qin omitted => reload self
-Entity.prototype.load$ = function(qin,cb) {
+Entity.prototype.load$ = async function(qin) {
   var self = this
   var si   = self.private$.seneca
 
   var qent = self
 
-  var q = resolve_id_query( qin, self )
-
-  cb = ( _.isFunction(qin) ? qin : cb ) || noop
+  var q = await resolve_id_query( qin, self )
 
   // empty query gives empty result
   if( null == q ) {
-    return cb()
+    return {};
   }
 
-  si.act( self.private$.entargs({ qent:qent, q:q, cmd:'load' }), cb )
+  await si.act( self.private$.entargs({ qent:qent, q:q, cmd:'load' }))
 
   return self
 }
 
-
 // TODO: need an update$ - does an atomic upsert
-
 
 // list zero or more
 // qin is optional, if omitted, list all
-Entity.prototype.list$ = function(qin,cb) {
+Entity.prototype.list$ = function(qin) {
   var self = this
   var si   = self.private$.seneca
 
   var qent = self
   var q = qin
-  if( _.isFunction(qin) ) {
-    q = {}
-    cb = qin
-  }
 
-  si.act( self.private$.entargs({qent:qent,q:q,cmd:'list'}),cb||noop )
+  await si.act( self.private$.entargs({qent:qent ,q:q ,cmd:'list'}) )
 
   return self
 }
 
-
 // remove one or more
 // TODO: make qin optional, in which case, use id
-Entity.prototype.remove$ = function(qin,cb) {
+Entity.prototype.remove$ = function(qin) {
   var self = this
   var si   = self.private$.seneca
 
-  var q = resolve_id_query( qin, self )
-
-  cb = ( _.isFunction(qin) ? qin : cb ) || noop
+  var q = await resolve_id_query( qin, self )
 
   // empty query means take no action
   if( null == q ) {
-    return cb()
+    return {};
   }
 
-  si.act( self.private$.entargs({qent:self,q:q,cmd:'remove'}),cb||noop )
+  await si.act( self.private$.entargs({qent:self,q:q,cmd:'remove'}))
 
   return self
 }
 Entity.prototype.delete$ = Entity.prototype.remove$
-
 
 Entity.prototype.fields$ = function() {
   var self = this
@@ -269,16 +240,15 @@ Entity.prototype.fields$ = function() {
   return fields
 }
 
-
 /* TODO: is this still needed? */
-Entity.prototype.close$ = function(cb) {
+Entity.prototype.close$ = function() {
   var self = this
   var si   = self.private$.seneca
 
   self.log$('close')
-  si.act( self.private$.entargs({cmd:'close'}), cb||noop)
+  await si.act( self.private$.entargs({cmd:'close'}))
+  return self;
 }
-
 
 Entity.prototype.is$ = function( canonspec ) {
   var self = this
@@ -293,10 +263,8 @@ Entity.prototype.is$ = function( canonspec ) {
   return util.inspect(self.canon$({object:true})) == util.inspect(canon)
 }
 
-
 Entity.prototype.canon$ = function(opt) {
   var self = this
-
   var canon = self.private$.canon
 
   if( opt ) {
@@ -344,9 +312,8 @@ Entity.prototype.canon$ = function(opt) {
   : [canon.zone,canon.base,canon.name]
 }
 
-
 // data = object, or true|undef = include $, false = exclude $
-Entity.prototype.data$ = function(data,canonkind) {
+Entity.prototype.data$ = function(data, canonkind) {
   var self = this
   var si   = self.private$.seneca
   var val
@@ -399,14 +366,12 @@ Entity.prototype.data$ = function(data,canonkind) {
   }
 }
 
-
 Entity.prototype.clone$ = function() {
   var self = this
   var si   = self.private$.seneca
 
   return self.make$(self.data$())
 }
-
 
 function hideToString(hidden,toString) {
   return function(){
@@ -420,7 +385,6 @@ function hideToString(hidden,toString) {
     return toString.call(entdata)
   }
 }
-
 
 Entity.prototype.toString = function() {
   var self = this
@@ -456,8 +420,6 @@ Entity.prototype.toString = function() {
 
 Entity.prototype.inspect = Entity.prototype.toString
 
-
-
 function resolve_id_query( qin, ent ) {
   var q
 
@@ -478,8 +440,6 @@ function resolve_id_query( qin, ent ) {
 
   return q
 }
-
-
 
 // parse a canon string:
 // $zone-base-name
@@ -510,14 +470,11 @@ function parsecanon(str) {
   return out
 }
 
-
 function ERRMSGMAP() {
   return {
     invalid_canon: "Invalid entity canon: <%=str%>; expected format: zone/base/name."
   }
 }
-
-
 
 module.exports = function make_entity( canon, seneca ) {
   return new Entity( canon, seneca )

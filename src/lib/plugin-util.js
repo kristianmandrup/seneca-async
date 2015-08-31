@@ -2,14 +2,10 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
-var _     = require('lodash')
-var error = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()})
-
-
-var common  = require('./common')
-var logging = require('./logging')
-
+var _     = require('lodash');
+var error = require('eraro')({package:'seneca', msgmap:ERRMSGMAP()});
+var common  = require('./common');
+var logging = require('./logging');
 
 function resolve_options( fullname, plugindef, seneca_options ) {
   var so = seneca_options
@@ -43,8 +39,6 @@ function resolve_options( fullname, plugindef, seneca_options ) {
   return outopts
 }
 
-
-
 function make_delegate( instance, plugin, options ) {
 
   // Adjust Seneca API to be plugin specific.
@@ -59,7 +53,6 @@ function make_delegate( instance, plugin, options ) {
     fatal$:true,
   })
 
-
   sd.log = function(level) {
     var args = common.arrayify(arguments)
 
@@ -70,7 +63,6 @@ function make_delegate( instance, plugin, options ) {
     instance.log.apply(instance,args)
   }
   logging.makelogfuncs(sd)
-
 
   sd.die  = options.makedie( sd, {type:'plugin',plugin:plugin.name} )
 
@@ -109,18 +101,14 @@ function make_delegate( instance, plugin, options ) {
     })
   }
 
-
   sd.context.module   = plugin.parent || module
   sd.context.name     = plugin.name || '-'
   sd.context.tag      = plugin.tag || '-'
   sd.context.full     = plugin.fullname
   sd.context.isplugin = true
 
-
   return sd;
 }
-
-
 
 function define_plugin( sd, plugin, options ) {
   var is_normal = plugin.init.length <= 1
@@ -153,11 +141,8 @@ function ERRMSGMAP() {
   }
 }
 
-
 module.exports = {
   make_delegate:   make_delegate,
   resolve_options: resolve_options,
   define_plugin:   define_plugin,
 }
-
-

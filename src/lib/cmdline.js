@@ -2,14 +2,10 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
-var util = require('util')
-
-
-var _        = require('lodash')
-var minimist = require('minimist')
-var archy    = require('archy')
-
+var util = require('util');
+var _        = require('lodash');
+var minimist = require('minimist');
+var archy    = require('archy');
 
 module.exports = function( seneca, argv ) {
   return minimist(process.argv.slice(2))
@@ -38,7 +34,7 @@ module.exports.handle = function( seneca, argv ) {
           })
         }
       }
-      
+
       if( !!cmdspec.print.options ) {
         seneca.options( { debug: { print: { options:true } } } )
       }

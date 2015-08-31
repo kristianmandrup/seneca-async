@@ -2,21 +2,14 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
-var util = require('util')
-
-
-var _   = require('lodash')
-var nid = require('nid')
-
+var util = require('util');
+var _   = require('lodash');
+var nid = require('nid');
 
 exports.tagnid = nid({length:3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
 
-
 function arrayify(){ return Array.prototype.slice.call(arguments[0],arguments[1]) }
 exports.arrayify = arrayify
-
-
 
 exports.delegate = function( scope, func ) {
   var args = Array.prototype.slice.call(arguments,2)
@@ -25,31 +18,17 @@ exports.delegate = function( scope, func ) {
   }
 }
 
-
 exports.noop = function noop() {
   // does nothing
 }
 
-
-
-
 // TODO: are any of the below used?
-
-
-
 var conf = exports.conf = {}
-
-
-
-
 
 var die = exports.die = function(msg) {
   console.error(msg)
   process.exit(1)
 }
-
-
-
 
 var copydata = exports.copydata = function(obj) {
   var copy
@@ -100,9 +79,7 @@ exports.argpattern = function argpattern( args ) {
   return sb.join(',')
 }
 
-
-
-  // noop for callbacks
+// noop for callbacks
 exports.nil = function nil(){
   _.each(arguments,function(arg){
     if( _.isFunction(arg) ) {
@@ -110,8 +87,6 @@ exports.nil = function nil(){
     }
   })
 }
-
-
 
 // remove any props containing $
 function clean(obj) {
@@ -129,8 +104,6 @@ function clean(obj) {
 }
 exports.clean = clean
 
-
-
 function deepextend() {
   var args = arrayify(arguments)
   args = _.reject( args, function(item) {
@@ -141,7 +114,6 @@ function deepextend() {
   return out
 }
 exports.deepextend = deepextend
-
 
 // TODO: can still fail if objects are too deeply complex
 // need a finite bound on recursion
@@ -206,38 +178,31 @@ function deepextend_impl(tar) {
   return tar
 }
 
-
 // loop over a list of items recursively
 // list can be an integer - number of times to recurse
-exports.recurse = function recurse(list,work,done) {
+exports.recurse = function async recurse(list,work) {
   /* jshint validthis:true */
+  try {
+    var ctxt = this
 
-  var ctxt = this
-
-  if( _.isNumber(list) ) {
-    var size = list
-    list = new Array(size)
-    for(var i = 0; i < size; i++){
-      list[i]=i
-    }
-  }
-  else {
-    list = _.clone(list)
-  }
-
-  function next(err,out){
-    if( err ) return done(err,out);
-
-    var item = list.shift()
-
-    if( void 0 !== item ) {
-      work.call(ctxt,item,next)
+    if( _.isNumber(list) ) {
+      var size = list
+      list = new Array(size)
+      for(var i = 0; i < size; i++){
+        list[i]=i
+      }
     }
     else {
-      done.call(ctxt,err,out)
+      list = _.clone(list)
     }
+
+    // Removed old style next, done pattern
+    while (item = list.shift()) {
+      await work.call(ctxt, item)
+    }
+  } catch (err) {
+    return err;
   }
-  next.call(ctxt)
 }
 
 
@@ -262,8 +227,7 @@ exports.argprops = function argprops( defaults, args, fixed, omits){
   return _.omit( deepextend( defaults, usedargs, fixed ), omits )
 }
 
-
-exports.print = function print(err,out){
+exports.print = function print(err, out){
   if(err) throw err;
 
   console.log(util.inspect(out,{depth:null}))
@@ -271,4 +235,3 @@ exports.print = function print(err,out){
     console.dir(arguments[i])
   }
 }
-

@@ -2,19 +2,12 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
-var fs = require('fs')
-
-
-var _      = require('lodash')
-var jsonic = require('jsonic')
-var error  = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()})
-
-
-var logging = require('./logging')
-var common  = require('./common')
-
-
+var fs = require('fs');
+var _      = require('lodash');
+var jsonic = require('jsonic');
+var error  = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()});
+var logging = require('./logging');
+var common  = require('./common');
 
 module.exports = function( argv, callmodule, defaults ) {
   var DEFAULT_OPTIONS_FILE = './seneca.options.js'
@@ -29,11 +22,9 @@ module.exports = function( argv, callmodule, defaults ) {
     default_file: {}
   }
 
-
   if( fs.existsSync(FATAL_OPTIONS_FILE) ) {
     throw error('inverted_file_name',{from:FATAL_OPTIONS_FILE, module:callmodule})
   }
-
 
   try {
     sourcemap.default_file = callmodule.require( DEFAULT_OPTIONS_FILE )
@@ -44,8 +35,6 @@ module.exports = function( argv, callmodule, defaults ) {
         e,'require_default_options',
         {errmsg:e.message, from:DEFAULT_OPTIONS_FILE, module:callmodule});
   }
-
-
 
   // Runtime options
 
@@ -93,9 +82,6 @@ module.exports = function( argv, callmodule, defaults ) {
     }
   }
 
-
-
-
   function set_options( input ) {
     if( null == input ) throw error('no_options');
 
@@ -109,7 +95,6 @@ module.exports = function( argv, callmodule, defaults ) {
     if( _.isString( from ) ) {
       loaded = load_options( from )
     }
-
 
     // This is the list of option sources.
     // The list is in reverse precedence order,
@@ -130,7 +115,6 @@ module.exports = function( argv, callmodule, defaults ) {
       options = common.deepextend( options, input )
     }
 
-
     // Legacy log settings.
     options.log = options.log || options.logger || options.logging || {}
 
@@ -139,12 +123,9 @@ module.exports = function( argv, callmodule, defaults ) {
     return options
   }
 
-
   function get_options() {
     return options
   }
-
-
 
   function load_options( from ) {
     var out = {}
@@ -165,21 +146,18 @@ module.exports = function( argv, callmodule, defaults ) {
       }
       catch(e) {
         if( 'MODULE_NOT_FOUND' != e.code )
-          throw error(e,'require_options',{from:from,module:callmodule});
+          throw error(e,'require_options',{from:from, module:callmodule});
       }
     }
 
     return out
   }
 
-
-
   return {
     set: set_options,
     get: get_options,
   }
 }
-
 
 function ERRMSGMAP() {
   return {

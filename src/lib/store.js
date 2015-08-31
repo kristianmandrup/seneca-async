@@ -2,15 +2,10 @@
 /* jshint node:true, asi:true, eqnull:true */
 "use strict";
 
-
-var _   = require('lodash')
-var nid = require('nid')
-
-
-var common = require('./common')
-
-
-var allcmds = ['save','load','list','remove','close','native']
+var _   = require('lodash');
+var nid = require('nid');
+var common = require('./common');
+var allcmds = ['save','load','list','remove','close','native'];
 
 /*
 
@@ -25,17 +20,13 @@ these can all be used together
 native$: anything; pass value to database connection as store specific query
 everything else is ignored
 each store needs to document this value format
-
-
 */
-
-
 
 // TODO: what if an entity object is passed in as a query param? convert to id?
 
 var wrap = {
   list: function( cmdfunc ) {
-    var outfunc = function( args, done ) {
+    var outfunc = async function( args ) {
       if( _.isString(args.sort) ) {
         var sort = {}
         if( '-' == args.sort[0] ) {
@@ -46,7 +37,7 @@ var wrap = {
         }
         args.sort = sort
       }
-      return cmdfunc.call(this,args,done)
+      return await cmdfunc.call(this,args)
     }
 
     for( var p in cmdfunc ) {
@@ -57,14 +48,13 @@ var wrap = {
   }
 }
 
-
 exports.cmds = allcmds.slice(0)
-
 
 /* opts.map = { canon: [cmds] }
  *   canon is in string format zone/base/name, with empty or - indicating undefined
  */
-exports.init = function(instance,opts,store,cb) {
+ // async ??
+exports.init = function(instance, opts, store) {
   /* jshint loopfunc:true */
 
   // TODO: parambulator validation
@@ -77,11 +67,11 @@ exports.init = function(instance,opts,store,cb) {
       if( '*' == cmds ) {
         cmds = allcmds
       }
-      entspecs.push({canon:canon,cmds:cmds})
+      entspecs.push({canon:canon, cmds:cmds})
     }
   }
   else {
-    entspecs.push({canon:'-/-/-',cmds:allcmds})
+    entspecs.push({canon:'-/-/-', cmds:allcmds})
   }
 
   //var tagnid = nid({length:opts.taglen||3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
@@ -120,12 +110,10 @@ exports.init = function(instance,opts,store,cb) {
     base = '-'===base ? void 0 : base
     name = '-'===name ? void 0 : name
 
-
     var entargs = {}
     if( void 0!== name ) entargs.name = name;
     if( void 0!== base ) entargs.base = base;
     if( void 0!== zone ) entargs.zone = zone;
-
 
     _.each(entspec.cmds, function(cmd){
       var args = _.extend({role:'entity',cmd:cmd},entargs)
@@ -143,7 +131,7 @@ exports.init = function(instance,opts,store,cb) {
       else return instance.die('store_cmd_missing',{cmd:cmd,store:storedesc});
 
       if( 'close' == cmd ) {
-        instance.add('role:seneca,cmd:close',function( close_args, done ) {
+        instance.add('role:seneca,cmd:close', async function( close_args ) {
           var closer = this
 
           if( !store.closed$ ) {
@@ -151,20 +139,16 @@ exports.init = function(instance,opts,store,cb) {
               if( err ) closer.log.error('close-error',close_args,err);
 
               store.closed$ = true
-              closer.prior(close_args,done)
+              await closer.prior(close_args)
             })
           }
-          else return closer.prior(close_args,done);
+          else return await closer.prior(close_args);
         })
       }
     })
   }
 
-  // legacy
-  if( cb ) {
-    cb.call(instance,null,tag,storedesc.join('~'))
-  }
-  else return {
+  return {
     tag:tag,
     desc:storedesc.join('~')
   }

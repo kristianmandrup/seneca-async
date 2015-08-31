@@ -12,7 +12,7 @@
     "build": "./build.sh"
   },
   "description": "Senaca using ES7 async functions",
-  "main": "dist/seneca-async.js",
+  "main": "dist/seneca.js",
   "scripts": {
     "test": "gulp",
     "test-browser": "gulp test-browser",

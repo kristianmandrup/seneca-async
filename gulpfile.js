@@ -39,26 +39,27 @@ function jscsNotify(file) {
   return file.jscs.success ? false : 'JSCS failed';
 }
 
-function createLintTask(taskName, files) {
-  gulp.task(taskName, function() {
-    return gulp.src(files)
-      .pipe($.plumber())
-      .pipe($.eslint())
-      .pipe($.eslint.format())
-      .pipe($.eslint.failOnError())
-      .pipe($.jscs())
-      .pipe($.notify(jscsNotify));
-  });
-}
+// function createLintTask(taskName, files) {
+//   gulp.task(taskName, function() {
+//     return gulp.src(files)
+//       .pipe($.plumber())
+//       .pipe($.eslint())
+//       .pipe($.eslint.format())
+//       .pipe($.eslint.failOnError())
+//       .pipe($.jscs())
+//       .pipe($.notify(jscsNotify));
+//   });
+// }
 
 // Lint our source code
-createLintTask('lint-src', ['src/**/*.js']);
+// createLintTask('lint-src', ['src/**/*.js']);
 
 // Lint our test code
-createLintTask('lint-test', ['test/**/*.js']);
+// createLintTask('lint-test', ['test/**/*.js']);
 
 // Build two versions of the library
-gulp.task('build', ['lint-src', 'clean'], function(done) {
+// 'lint-src'
+gulp.task('build', ['clean'], function(done) {
   esperanto.bundle({
     base: 'src',
     entry: config.entryFileName,
@@ -135,7 +136,8 @@ function test() {
     .pipe($.mocha({reporter: 'dot', globals: config.mochaGlobals}));
 }
 
-gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
+// 'lint-test', 'lint-src'
+gulp.task('coverage', [], function(done) {
   require('babel-core/register');
   gulp.src(['src/**/*.js'])
     .pipe($.istanbul({ instrumenter: isparta.Instrumenter }))
@@ -148,22 +150,25 @@ gulp.task('coverage', ['lint-src', 'lint-test'], function(done) {
 });
 
 // Lint and run our tests
-gulp.task('test', ['lint-src', 'lint-test'], function() {
+// 'lint-test', 'lint-src'
+gulp.task('test', [], function() {
   require('babel-core/register');
   return test();
 });
 
 // Ensure that linting occurs before browserify runs. This prevents
 // the build from breaking due to poorly formatted code.
+// 'lint-test', 'lint-src'
 gulp.task('build-in-sequence', function(callback) {
-  runSequence(['lint-src', 'lint-test'], 'browserify', callback);
+  runSequence([], 'browserify', callback);
 });
 
 // These are JS files that should be watched by Gulp. When running tests in the browser,
 // watchify is used instead, so these aren't included.
 const jsWatchFiles = ['src/**/*', 'test/**/*'];
 // These are files other than JS files which are to be watched. They are always watched.
-const otherWatchFiles = ['package.json', '**/.eslintrc', '.jscsrc'];
+// '**/.eslintrc', '.jscsrc'
+const otherWatchFiles = ['package.json'];
 
 // Run the headless unit tests as you make changes.
 gulp.task('watch', function() {

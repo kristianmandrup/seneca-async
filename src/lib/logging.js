@@ -13,11 +13,7 @@ var jsonic = require('jsonic')
 var error  = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()})
 
 var common = require('./common')
-
-
 var start_time = Date.now()
-
-
 var log_index = {
   level:  2,
   type:   3,
@@ -51,7 +47,6 @@ function multiplexhandler(a,b) {
     return fn
   }
 }
-
 
 /*
 
@@ -103,7 +98,6 @@ logspec.map:
 
 */
 
-
 var makelogrouter = exports.makelogrouter = function( logspec ) {
   var map = []
 
@@ -139,8 +133,6 @@ var makelogrouter = exports.makelogrouter = function( logspec ) {
 
   return logrouter
 }
-
-
 
 function shortcut( spec ) {
   if( spec && ( true === spec.print ||
@@ -210,7 +202,6 @@ var makelogroute = exports.makelogroute = function(entry,logrouter) {
           }
         })
 
-
           vals = _.uniq(newvals)
         _.each(vals,function(level){
           if( -1==loglevels.indexOf(level) ) {
@@ -239,7 +230,6 @@ var makelogroute = exports.makelogroute = function(entry,logrouter) {
       routes = newroutes
     }
   })
-
 
   _.each(routes,function(route){
     var routestr = util.inspect(route)
@@ -318,7 +308,6 @@ function make_regex_handler( regex, handler ) {
   }
 }
 
-
 function make_act_handler( act, handler ) {
   return function() {
     if( -1 != (''+arguments[ log_index.act ]).indexOf( act ) ) {
@@ -326,7 +315,6 @@ function make_act_handler( act, handler ) {
     }
   }
 }
-
 
 function make_pin_handler( pin, handler ) {
   pin = _.isObject(pin) ? pin : jsonic(pin)
@@ -338,8 +326,6 @@ function make_pin_handler( pin, handler ) {
     }
   }
 }
-
-
 
 var handlers = exports.handlers = {}
 
@@ -398,10 +384,7 @@ handlers.file = function file(filepath,opts) {
   return handlers.stream(ws,opts)
 }
 
-
 // TODO: HTTP logging as per node-logentries
-
-
 
 var makelogfuncs = exports.makelogfuncs = function(target) {
 
@@ -419,7 +402,6 @@ var makelogfuncs = exports.makelogfuncs = function(target) {
   target.log.error = makelogger('error')
   target.log.fatal = makelogger('fatal')
 }
-
 
 var makelog = exports.makelog = function( logspec, ctxt ) {
   var identifier = ctxt.id
@@ -442,7 +424,7 @@ var makelog = exports.makelog = function( logspec, ctxt ) {
 
     var pluginref = args[ log_index.plugin ]
     pluginref = _.isString(pluginref) ? pluginref.trim() : pluginref
-    
+
     var routing = {
       level:  args[ log_index.level ],
       type:   args[ log_index.type ],
@@ -481,8 +463,6 @@ var makelog = exports.makelog = function( logspec, ctxt ) {
   return log
 }
 
-
-
 function parse_command_line( spec, logspec, flags ) {
   flags = flags || {}
 
@@ -513,7 +493,6 @@ function parse_command_line( spec, logspec, flags ) {
     })
     return;
   }
-
 
   // parse: level=,type=,plugin=,tag=,case=,handler=
   // handler can be print,file:path
@@ -548,7 +527,6 @@ function parse_command_line( spec, logspec, flags ) {
     }
   })
 
-
   if( 0 < _.keys(entry).length ) {
 
     // print by default
@@ -561,7 +539,6 @@ function parse_command_line( spec, logspec, flags ) {
 }
 
 exports.parse_command_line = parse_command_line;
-
 
 exports.log_act_in = function( instance, actinfo, actmeta,
                                args, prior_ctxt, act_callpoint )
@@ -591,13 +568,12 @@ exports.log_act_in = function( instance, actinfo, actmeta,
     })
 }
 
-
 exports.log_act_out =
   function( instance, actinfo, actmeta, args, result, prior_ctxt, act_callpoint )
 {
   if( actmeta.sub ) return;
 
-  var accept = (actinfo.info && actinfo.info.accept ) 
+  var accept = (actinfo.info && actinfo.info.accept )
 
   instance.log.debug(
     'act',
@@ -622,7 +598,6 @@ exports.log_act_out =
       ])
     })
 }
-
 
 exports.log_act_err = function( instance, actinfo, actmeta,
                                 args, prior_ctxt, err, act_callpoint )
@@ -654,7 +629,6 @@ exports.log_act_err = function( instance, actinfo, actmeta,
   )
 
 }
-
 
 exports.log_act_cache = function( instance, actinfo, actmeta,
                                   args, prior_ctxt, act_callpoint )
@@ -700,7 +674,6 @@ exports.log_exec_err = function( instance, err ) {
     err.stack )
 }
 
-
 exports.log_act_bad = function( instance, err, loglevel ) {
   if( false === err.log ) return;
 
@@ -722,7 +695,6 @@ exports.log_act_bad = function( instance, err, loglevel ) {
     jsonic.stringify(err.details),
     err.stack )
 }
-
 
 exports.make_delegate_log = function(actid,actmeta,instance) {
 
@@ -746,7 +718,6 @@ exports.make_delegate_log = function(actid,actmeta,instance) {
     }
   }
 }
-
 
 function minlen(s) {
   return (s && s.length < 8) ? s+'       ' : s

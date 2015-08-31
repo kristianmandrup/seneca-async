@@ -3,45 +3,40 @@
 // <style> p,ul,li { margin:5px !important; } </style>
 "use strict";
 
-
 // Current version, access using _seneca.version_ property.
 var VERSION = '0.6.4'
 
-
 // Node API modules
-var util   = require('util')
-var events = require('events')
-var net    = require('net')
-var repl   = require('repl')
-var assert = require('assert')
-var vm     = require('vm')
-
+var util   = require('util');
+var events = require('events');
+var net    = require('net');
+var repl   = require('repl');
+var assert = require('assert');
+var vm     = require('vm');
 
 // External modules.
-var _            = require('lodash')
-var nid          = require('nid')
-var jsonic       = require('jsonic')
-var patrun       = require('patrun')
-var parambulator = require('parambulator')
-var norma        = require('norma')
-var stats        = require('rolling-stats')
-var makeuse      = require('use-plugin')
-var lrucache     = require('lru-cache')
-var zig          = require('zig')
-var gex          = require('gex')
-var executor     = require('gate-executor')
-var eraro        = require('eraro')
-
+var _            = require('lodash');
+var nid          = require('nid');
+var jsonic       = require('jsonic');
+var patrun       = require('patrun');
+var parambulator = require('parambulator');
+var norma        = require('norma');
+var stats        = require('rolling-stats');
+var makeuse      = require('use-plugin');
+var lrucache     = require('lru-cache');
+var zig          = require('zig');
+var gex          = require('gex');
+var executor     = require('gate-executor');
+var eraro        = require('eraro');
 
 // Internal modules.
-var make_entity   = require('./lib/entity')
-var store         = require('./lib/store')
-var logging       = require('./lib/logging')
-var plugin_util   = require('./lib/plugin-util')
-var make_optioner = require('./lib/optioner')
-var cmdline       = require('./lib/cmdline')
-var common        = require('./lib/common')
-
+var make_entity   = require('./lib/entity');
+var store         = require('./lib/store');
+var logging       = require('./lib/logging');
+var plugin_util   = require('./lib/plugin-util');
+var make_optioner = require('./lib/optioner');
+var cmdline       = require('./lib/cmdline');
+var common        = require('./lib/common');
 
 // Create utilities.
 var arr = common.arrayify
@@ -52,10 +47,10 @@ var error = eraro({
   override: true
 })
 
-
 // Module exports.
+// Primary export function, creates a new Seneca instance.
+// function init( seneca_options, more_options )
 module.exports = init
-
 
 // Default options.
 var DEFAULT_OPTIONS = {
@@ -186,23 +181,23 @@ var DEFAULT_OPTIONS = {
 function make_seneca( initial_options ) {
   /* jshint validthis:true */
 
-  initial_options = initial_options || {} // ensure defined
+  initial_options = initial_options || {}; // ensure defined
 
 
   // Create a private context.
-  var private$ = make_private()
+  var private$ = make_private();
 
 
   // Create a new root Seneca instance.
-  var root = new Seneca()
+  var root = new Seneca();
 
 
   // Define public member variables.
-  root.root       = root
-  root.start_time = Date.now()
-  root.fixedargs  = {}
-  root.context    = {}
-  root.version    = VERSION
+  root.root       = root;
+  root.start_time = Date.now();
+  root.fixedargs  = {};
+  root.context    = {};
+  root.version    = VERSION;
 
 
   // Seneca methods. Official API.
@@ -224,11 +219,9 @@ function make_seneca( initial_options ) {
   root.start      = api_start      // Start an action chain.
   root.error      = api_error      // Set global error handler.
 
-
   // Method aliases.
   root.make$      = api_make
   root.hasact     = api_has
-
 
   // Non-API methods.
   root.logroute   = api_logroute
@@ -245,11 +238,9 @@ function make_seneca( initial_options ) {
   root.fix        = api_fix
   root.delegate   = api_delegate
 
-
   // Legacy API; Deprecated.
   root.startrepl = api_repl
   root.findact   = api_find
-
 
   // Create internal tools.
   var actnid     = nid({length:5})
@@ -259,7 +250,7 @@ function make_seneca( initial_options ) {
 
 
   // Create option resolver.
-  private$.optioner = make_optioner( 
+  private$.optioner = make_optioner(
     argv,
     initial_options.module || module.parent || module,
     DEFAULT_OPTIONS )
@@ -333,7 +324,6 @@ function make_seneca( initial_options ) {
     }
   })
 
-
   // setup status log
   if( 0 < so.status.interval && so.status.running ) {
     private$.stats = private$.stats || {}
@@ -356,7 +346,6 @@ function make_seneca( initial_options ) {
     }
   }
 
-
   private$.plugins      = {}
   private$.exports      = { options: common.deepextend({},so) }
   private$.plugin_order = { byname:[], byref:[] }
@@ -367,7 +356,7 @@ function make_seneca( initial_options ) {
     builtin:   ''
   })
 
-  private$.actcache = ( so.actcache.active ? 
+  private$.actcache = ( so.actcache.active ?
                         lrucache({max:so.actcache.size}) :
                         {set:_.noop} )
 
@@ -388,7 +377,6 @@ function make_seneca( initial_options ) {
 
   root.toString = api_toString
 
-
   root.util = {
     deepextend: common.deepextend,
     recurse:    common.recurse,
@@ -402,16 +390,13 @@ function make_seneca( initial_options ) {
     parsecanon: make_entity.parsecanon,
   }
 
-
   root.store = {
     init: store.init,
     cmds: store.cmds
   }
 
-
   // say hello, printing identifier to log
   root.log.info( 'hello', root.toString(), callpoint() )
-
 
   // dump options if debugging
   root.log.debug('options',function() {
@@ -432,11 +417,6 @@ function make_seneca( initial_options ) {
     entry.handler = handler || entry.handler
     logging.makelogroute(entry,root.log.router)
   }
-
-
-
-
-
 
   function api_register( plugin ) {
     var self = this
@@ -474,8 +454,8 @@ function make_seneca( initial_options ) {
     }
 
     plugin.name = meta.name || plugin.name
-    plugin.tag = 
-      meta.tag || 
+    plugin.tag =
+      meta.tag ||
       plugin.tag ||
       (plugin.options && plugin.options.tag$)
 
@@ -559,8 +539,6 @@ function make_seneca( initial_options ) {
                    {exports:exports},fullname!=pluginref?fullname:undefined)
   }
 
-
-
   function api_depends() {
     var self = this
 
@@ -578,8 +556,6 @@ function make_seneca( initial_options ) {
     })
   }
 
-
-
   function api_export( key ) {
     var self = this
 
@@ -594,9 +570,6 @@ function make_seneca( initial_options ) {
     return exportval;
   }
 
-
-
-
   // all optional
   function api_make() {
     var self = this
@@ -605,9 +578,6 @@ function make_seneca( initial_options ) {
     return private$.entity.make$.apply(private$.entity,args)
   }
   root.make$ = root.make
-
-
-
 
   function api_listen() {
     var self = this
@@ -626,8 +596,6 @@ function make_seneca( initial_options ) {
     return self
   }
 
-
-
   function api_client() {
     var self = this
 
@@ -641,8 +609,8 @@ function make_seneca( initial_options ) {
     // Queue messages while waiting for client to become active.
     var sendqueue = []
     var sendclient = {
-      send: function( args, done ) {
-        var tosend = {instance:this, args:args, done:done }
+      send: function( args ) {
+        var tosend = {instance:this, args:args }
         self.log.debug('client','sendqueue-add',sendqueue.length+1,config,tosend)
         sendqueue.push( tosend )
       }
@@ -662,8 +630,8 @@ function make_seneca( initial_options ) {
       // Only wrap if pin is specific.
       // Don't want to wrap all patterns, esp. system ones!
       if( 0 < _.keys(pin).length ) {
-        self.wrap(pin,function(args,done){
-          sendclient.send.call( this, args, done )
+        self.wrap(pin, async function(args) {
+          await sendclient.send.call( this, args)
         })
       }
 
@@ -671,8 +639,8 @@ function make_seneca( initial_options ) {
       private$.clientrouter.add(
         pin,
         {
-          func: function(args,done) {
-            sendclient.send.call( this, args, done )
+          func: async function(args) {
+            await sendclient.send.call( this, args)
           },
           log:         self.log,
           argpattern:  common.argpattern(pin),
@@ -704,7 +672,7 @@ function make_seneca( initial_options ) {
             var tosend = sendqueue.shift()
             self.log.debug('client','sendqueue-processing',
                            sendqueue.length+1,config,tosend)
-            sendclient.send.call(tosend.instance,tosend.args,tosend.done)
+            await sendclient.send.call(tosend.instance,tosend.args)
             setImmediate(sendnext)
           }
         }
@@ -713,7 +681,6 @@ function make_seneca( initial_options ) {
 
     return self;
   }
-
 
   function parseConfig( args, options ) {
     var out = {}
@@ -747,7 +714,6 @@ function make_seneca( initial_options ) {
 
     else out = config;
 
-
     _.each( options, function(v,k){
       if( _.isObject(v) ) return;
       out[k] =  ( void 0 === out[k] ? v : out[k] )
@@ -774,7 +740,6 @@ function make_seneca( initial_options ) {
 
     return out
   }
-
 
   function api_cluster() {
     /* jshint loopfunc:true */
@@ -803,15 +768,11 @@ function make_seneca( initial_options ) {
     else return self;
   }
 
-
-
   function api_hasplugin(plugindesc,tag) {
     var self = this
     tag = ('' === tag || '-' === tag) ? null : tag
     return !!self.findplugin(plugindesc,tag)
   }
-
-
 
   // get plugin instance
   function api_findplugin(plugindesc,tag) {
@@ -823,8 +784,6 @@ function make_seneca( initial_options ) {
 
     return plugin
   }
-
-
 
   function api_pin( pattern, pinopts ) {
     var thispin = this
@@ -847,7 +806,6 @@ function make_seneca( initial_options ) {
         return 'pin:'+common.argpattern(pattern)+'/'+thispin
       }
     }
-
 
     methods.forEach(function(method) {
       var mpat = method.match
@@ -902,8 +860,6 @@ function make_seneca( initial_options ) {
     }
   }
 
-
-
   function api_sub() {
     var self = this
 
@@ -930,9 +886,9 @@ function make_seneca( initial_options ) {
             }
             catch(ex) {
               // TODO: not really satisfactory
-              var err = error(ex,'sub_function_catch',{args:args,result:result})
+              var err = error(ex,'sub_function_catch',{args:args,result:result});
               self.log.error(
-                'sub','err',args.meta.id$, err.message, args, error.stack )
+                'sub','err',args.meta.id$, err.message, args, error.stack );
             }
           })
         }
@@ -941,24 +897,24 @@ function make_seneca( initial_options ) {
       // TODO: other cases
 
       // Subs are triggered via events
-      self.on('act-in',  annotate( 'in$',  private$.handle_sub))
-      self.on('act-out', annotate( 'out$', private$.handle_sub))
+      self.on('act-in',  annotate( 'in$',  private$.handle_sub));
+      self.on('act-out', annotate( 'out$', private$.handle_sub));
     }
 
     function annotate( prop, handle_sub ) {
       return function( args,result ) {
-        args   = _.clone(args)
-        result = _.clone(result)
-        args[prop] = true
-        handle_sub(args,result)
+        args   = _.clone(args);
+        result = _.clone(result);
+        args[prop] = true;
+        handle_sub(args,result);
       }
     }
 
     var subs = private$.subrouter.find(pattern)
     if( !subs ) {
-      private$.subrouter.add(pattern,subs=[])
+      private$.subrouter.add(pattern,subs=[]);
     }
-    subs.push(subargs.action)
+    subs.push(subargs.action);
 
     return self;
   }
@@ -968,11 +924,11 @@ function make_seneca( initial_options ) {
   // ### seneca.add
   // Add an message pattern and action function.
   //
-  // `seneca.add( pattern, action )`  
+  // `seneca.add( pattern, action )`
   //    * _pattern_ `o|s` &rarr; pattern definition
   //    * _action_ `f` &rarr; pattern action function
   //
-  // `seneca.add( pattern_string, pattern_object, action )`  
+  // `seneca.add( pattern_string, pattern_object, action )`
   //    * _pattern_string_ `s` &rarr; pattern definition as jsonic string
   //    * _pattern_object_ `o` &rarr; pattern definition as object
   //    * _action_ `f` &rarr; pattern action function
@@ -997,7 +953,7 @@ function make_seneca( initial_options ) {
     var actmeta   = args.actmeta || {}
 
     actmeta.plugin_name     = actmeta.plugin_name || 'root$'
-    actmeta.plugin_fullname = actmeta.plugin_fullname || 
+    actmeta.plugin_fullname = actmeta.plugin_fullname ||
       actmeta.plugin_name + (actmeta.plugin_tag ? '/' + actmeta.plugin_tag : '')
 
     var add_callpoint = callpoint()
@@ -1010,8 +966,8 @@ function make_seneca( initial_options ) {
     // Deprecate a pattern by providing a string message using deprecate$ key.
     actmeta.deprecate = pattern.deprecate$
 
-    var strict_add 
-          = (pattern.strict$ && null != pattern.strict$.add) 
+    var strict_add
+          = (pattern.strict$ && null != pattern.strict$.add)
           ? !!pattern.strict$.add
           : !!so.strict.add
 
@@ -1216,10 +1172,8 @@ function make_seneca( initial_options ) {
   function api_act() {
     var self = this
 
-    var spec    = parse_pattern( self, common.arrayify(arguments), 'done:f?' )
+    var spec    = parse_pattern( self, common.arrayify(arguments) )
     var args    = spec.pattern
-    var actdone = spec.done
-
 
     args = _.extend(args,self.fixedargs)
     var actmeta = self.find(args)
@@ -1233,7 +1187,7 @@ function make_seneca( initial_options ) {
 
     // action pattern found
     if( actmeta ) {
-      do_act(self,actmeta,false,args,actdone)
+      await do_act(self,actmeta,false,args)
       return self;
     }
 
@@ -1241,7 +1195,6 @@ function make_seneca( initial_options ) {
 
     if( _.isPlainObject( args.default$ ) ) {
       self.log.debug('act','-','-','DEFAULT',self.util.clean(args),callpoint())
-      if( actdone ) actdone.call( self, null, _.clone(args.default$) );
       return self;
     }
 
@@ -1264,7 +1217,6 @@ function make_seneca( initial_options ) {
 
     if( so.debug.fragile ) throw err;
 
-    if( actdone ) actdone.call( self, err );
     return self;
   }
 
@@ -1276,8 +1228,8 @@ function make_seneca( initial_options ) {
     pin = _.isArray(pin) ? pin : [pin]
     _.each(pin, function(p) {
       _.each( pinthis.findpins(p), function(actpattern) {
-        pinthis.add(actpattern,function(args,done) {
-          wrapper.call(this,args,done)
+        pinthis.add(actpattern, async function(args) {
+          await wrapper.call(this,args)
         })
       })
     })
@@ -1287,15 +1239,14 @@ function make_seneca( initial_options ) {
 
   // close seneca instance
   // sets public seneca.closed property
-  function api_close(done) {
+  function async api_close() {
     var self = this
 
     self.closed = true
 
     self.log.debug( 'close', 'start', callpoint() )
-    self.act('role:seneca,cmd:close,closing$:true',function(err) {
+    await self.act('role:seneca,cmd:close,closing$:true', function(err) {
       self.log.debug('close','end',err)
-      if( _.isFunction(done) ) return done.call(self,err);
     })
   }
 
@@ -1502,23 +1453,17 @@ function make_seneca( initial_options ) {
     }).listen( repl_opts.port, repl_opts.host )
   }
 
-
-
   // Return self. Mostly useful as a check that this is a Seneca instance.
   function api_seneca() {
     return this
   }
-
-
 
   // Describe this instance using the form: Seneca/VERSION/ID
   function api_toString() {
     return this.name
   }
 
-
-
-  function do_act( instance, actmeta, prior_ctxt, origargs, cb ) {
+  function async do_act( instance, actmeta, prior_ctxt, origargs) {
     var args = _.clone(origargs)
     prior_ctxt = prior_ctxt || {chain:[],entry:true,depth:1}
 
@@ -1526,19 +1471,17 @@ function make_seneca( initial_options ) {
 
     var id_tx = ( args.id$ || args.actid$ || instance.idgen() ).split('/')
 
-    var tx = 
+    var tx =
           id_tx[1] ||
           origargs.tx$ ||
           instance.fixedargs.tx$ ||
           instance.idgen()
 
-    var actid    = (id_tx[0] || instance.idgen()) + '/' + tx 
+    var actid    = (id_tx[0] || instance.idgen()) + '/' + tx
 
     var actstart = Date.now()
 
-    cb = cb || common.noop
-
-    if( act_cache_check( instance, args, prior_ctxt, cb, act_callpoint ) ) return;
+    if( await act_cache_check( instance, args, prior_ctxt, act_callpoint ) ) return;
 
     var actstats = act_stats_call( actmeta.pattern )
 
@@ -1566,7 +1509,7 @@ function make_seneca( initial_options ) {
                          act_callpoint )
     }
 
-    logging.log_act_in( root, {actid:actid,info:origargs.transport$}, 
+    logging.log_act_in( root, {actid:actid,info:origargs.transport$},
                         actmeta, callargs, prior_ctxt,
                         act_callpoint )
 
@@ -1587,7 +1530,6 @@ function make_seneca( initial_options ) {
         prior_ctxt.entry = prior_ctxt.depth <= 0
 
         var result  = arr(arguments)
-        var call_cb = true
 
         var resdata = result[1]
         var info    = result[2]
@@ -1606,7 +1548,7 @@ function make_seneca( initial_options ) {
           if( !( 'generate_id' === callargs.cmd ||
                  true === callargs.note ||
                  'native' === callargs.cmd ||
-                 'quickcode' === callargs.cmd 
+                 'quickcode' === callargs.cmd
                ))
           {
             err = error(
@@ -1628,10 +1570,9 @@ function make_seneca( initial_options ) {
           private$.stats.act.fails++
           actstats.fails++
 
-          var out = act_error(instance,err,actmeta,result,cb,
+          var out = await act_error(instance,err,actmeta,result,
                               actend-actstart,callargs,prior_ctxt,act_callpoint)
 
-          call_cb = out.call_cb
           result[0] = out.err
 
           if( _.isFunction(delegate.on_act_err) ) {
@@ -1663,12 +1604,6 @@ function make_seneca( initial_options ) {
           actstats.done++
         }
 
-        try {
-          if( call_cb ) {
-            cb.apply(delegate,result.slice(0,2)) // note: err == result[0]
-          }
-        }
-
         // for exceptions thrown inside the callback
         catch( ex ) {
           var err = ex
@@ -1680,7 +1615,7 @@ function make_seneca( initial_options ) {
                     err = new Error(''+ex) )
           }
 
-          callback_error( instance, err, actmeta, result, cb,
+          await callback_error( instance, err, actmeta, result,
                           actend-actstart, callargs, prior_ctxt, act_callpoint )
         }
       }
@@ -1689,53 +1624,53 @@ function make_seneca( initial_options ) {
       }
     }
 
-
-
-    act_param_check( origargs, actmeta, function( err ) {
-      if( err ) return act_done(err);
+    // TODO: err should instead be handled via async and try/catch!!
+    try {
+      await act_param_check( origargs, actmeta);
 
       var execspec = {
         id:      actid,
         gate:    prior_ctxt.entry && !!callargs.gate$,
         ungate:  !!callargs.ungate$,
-        desc:    actmeta.argpattern,
-        cb:      act_done,
+        desc:    actmeta.argpattern
 
         plugin: {
           name: actmeta.plugin_name,
           tag:  actmeta.plugin_tag
         },
 
-        fn:function(cb) {
+        fn: async function() {
           if( root.closed && !callargs.closing$ ) {
             return cb(error('instance-closed',{args:common.clean(callargs)}))
           }
 
           delegate.good = function(out) {
-            cb(null,out)
+            return out;
           }
 
           delegate.bad = function(err) {
-            cb(err)
+            throw err;
           }
 
           if( _.isFunction(delegate.on_act_in) ) {
             delegate.on_act_in(actmeta,callargs)
           }
-          actmeta.func.call(delegate,callargs,cb)
+          await actmeta.func.call(delegate,callargs)
         },
       }
 
       private$.executor.execute(execspec)
-    })
+
+    } catch ( err ) {
+        // async?
+        if( err ) return act_done(err);
+    }
   }
 
 
-  function act_error( instance, err, actmeta, result, cb,
+  function act_error( instance, err, actmeta, result,
                       duration, callargs, prior_ctxt, act_callpoint )
   {
-    var call_cb = true
-
     if( !err.seneca ) {
       err = error(err,'act_execute',_.extend(
         {},
@@ -1744,7 +1679,6 @@ function make_seneca( initial_options ) {
           message:  (err.eraro && err.orig) ? err.orig.message : err.message,
           pattern:  actmeta.pattern,
           fn:       actmeta.func,
-          cb:       cb,
           instance: instance.toString()
         }))
 
@@ -1752,9 +1686,9 @@ function make_seneca( initial_options ) {
     }
 
     // Special legacy case for seneca-perm
-    else if( err.orig && 
-             _.isString(err.orig.code) && 
-             0 === err.orig.code.indexOf('perm/') ) 
+    else if( err.orig &&
+             _.isString(err.orig.code) &&
+             0 === err.orig.code.indexOf('perm/') )
     {
       err = err.orig
       result[0] = err
@@ -1774,11 +1708,12 @@ function make_seneca( initial_options ) {
       call_cb = !so.errhandler.call(instance,err)
     }
 
-    return {call_cb:call_cb,err:err}
+    // FUCK THIS!!! avoid all this CallBack shit!
+    return {call_cb:call_cb, err:err}
   }
 
 
-  function callback_error( instance, err, actmeta, result, cb,
+  function callback_error( instance, err, actmeta, result,
                            duration, callargs, prior_ctxt, act_callpoint )
   {
     if( !err.seneca ) {
@@ -1818,9 +1753,8 @@ function make_seneca( initial_options ) {
   //    * _instance_      (object)    &rarr;  seneca instance
   //    * _args_          (object)    &rarr;  action arguments
   //    * _prior_ctxt_    (object?)   &rarr;  prior action context, if any
-  //    * _actcb_         (function)  &rarr;  action callback
   //    * _act_callpoint_ (function)  &rarr;  action call point
-  function act_cache_check( instance, args, prior_ctxt, actcb, act_callpoint ) {
+  function act_cache_check( instance, args, prior_ctxt, act_callpoint ) {
     assert.ok( _.isObject(instance), 'act_cache_check; instance; isObject')
     assert.ok( _.isObject(args),     'act_cache_check; args; isObject')
     assert.ok( !prior_ctxt || _.isObject(prior_ctxt),
@@ -1862,8 +1796,6 @@ function make_seneca( initial_options ) {
     return actstats
   }
 
-
-
   function act_make_delegate( instance, tx, callargs, actmeta, prior_ctxt ) {
     var delegate_args = {}
     if( null != callargs.gate$ ) {
@@ -1880,7 +1812,7 @@ function make_seneca( initial_options ) {
     logging.makelogfuncs(delegate)
 
     if( actmeta.priormeta ) {
-      delegate.prior = function(prior_args,prior_cb) {
+      delegate.prior = async function(prior_args) {
         prior_args = _.clone(prior_args)
 
         var sub_prior_ctxt = _.clone(prior_ctxt)
@@ -1900,18 +1832,12 @@ function make_seneca( initial_options ) {
 
         prior_args.tx$ = tx
 
-        do_act(delegate,actmeta.priormeta,sub_prior_ctxt,prior_args,prior_cb)
-      }
-
-      delegate.parent = function(prior_args,prior_cb) {
-        delegate.log.warn('The method name seneca.parent is deprecated.'+
-                          ' Please use seneca.prior instead.')
-        delegate.prior(prior_args,prior_cb)
+        await do_act(delegate,actmeta.priormeta,sub_prior_ctxt,prior_args)
       }
     }
-    else delegate.prior = function( msg, done ) {
+    else delegate.prior = async function( msg ) {
       var out = callargs.default$ ? callargs.default$ : null
-      return done.call( delegate, null, out )
+      await out(msg);
     }
 
     return delegate;
@@ -1923,23 +1849,22 @@ function make_seneca( initial_options ) {
   //    * _args_     (object)    &rarr;  action arguments
   //    * _actmeta_  (object)    &rarr;  action meta data
   //    * _done_     (function)  &rarr;  callback function
-  function act_param_check( args, actmeta, done ) {
+  function async act_param_check( args, actmeta ) {
     assert.ok( _.isObject(args),    'act_param_check; args; isObject')
     assert.ok( _.isObject(actmeta), 'act_param_check; actmeta; isObject')
-    assert.ok( _.isFunction(done),  'act_param_check; done; isFunction')
 
     if( actmeta.parambulator ) {
-      actmeta.parambulator.validate(args,function(err) {
-        if(err) return done(
-          error('act_invalid_args', {
-            pattern: actmeta.pattern,
-            message: err.message,
-            args:    common.clean(args)
-          }));
-        return done();
-      })
+      try {
+        await actmeta.parambulator.validate(args);
+      } catch(err) {
+        return error('act_invalid_args', {
+          pattern: actmeta.pattern,
+          message: err.message,
+          args:    common.clean(args)
+        }));
+      }
     }
-    else return done();
+    else return;
   }
 
 
@@ -1973,8 +1898,6 @@ function make_seneca( initial_options ) {
     }
   }
 
-
-
   function api_fix() {
     var self = this
 
@@ -1990,8 +1913,6 @@ function make_seneca( initial_options ) {
 
     return fix
   }
-
-
 
   function api_delegate(fixedargs) {
     var self = this
@@ -2059,8 +1980,6 @@ function make_seneca( initial_options ) {
     return delegate
   }
 
-
-
   function api_options( options ) {
     var self = this
 
@@ -2068,8 +1987,8 @@ function make_seneca( initial_options ) {
       self.log.debug( 'options', 'set', options, callpoint() )
     }
 
-    so = private$.exports.options =( (null == options) ? 
-                                     private$.optioner.get() : 
+    so = private$.exports.options =( (null == options) ?
+                                     private$.optioner.get() :
                                      private$.optioner.set( options ) )
 
     if( options && options.log ) {
@@ -2079,13 +1998,10 @@ function make_seneca( initial_options ) {
     return so
   }
 
-
-
   function api_start( errhandler ) {
     var sd = this.delegate()
     var options = sd.options()
     options.zig = options.zig || {}
-
 
     function make_fn(self,origargs) {
       var args = parse_pattern(self,origargs,'fn:f?')
@@ -2099,12 +2015,12 @@ function make_seneca( initial_options ) {
 
       var fn
       if( args.fn ) {
-        fn = function(data,done){
-          return args.fn.call(self,data,done)
+        fn = async function(data){
+          return await args.fn.call(self,data)
         }
       }
       else {
-        fn = function(data,done){
+        fn = async function(data){
           /* jshint evil:true */
 
           if( args.strargs ) {
@@ -2116,7 +2032,7 @@ function make_seneca( initial_options ) {
             })
           }
 
-          self.act(actargs,done)
+          await self.act(actargs)
           return true
         }
         fn.nm = args.strargs
@@ -2138,10 +2054,9 @@ function make_seneca( initial_options ) {
       })
     })
 
-    sd.end = function(cb){
+    sd.end = async function(){
       var self = this
-      dzig.end(function(){
-        if( cb ) return cb.apply(self,arguments);
+      await dzig.end(function(){
         if( errhandler ) return errhandler.apply(self,arguments);
       })
       return self
@@ -2180,14 +2095,10 @@ function make_seneca( initial_options ) {
     return sd
   }
 
-
-  
   function api_error( errhandler ) {
     this.options( {errhandler:errhandler} )
     return this
   }
-
-
 
   // Create entity delegate.
   var sd = root.delegate()
@@ -2203,7 +2114,6 @@ function make_seneca( initial_options ) {
 
   private$.exports.Entity = make_entity.Entity
 
-
   // DEPRECATED
   // for use with async
   root.next_act = function() {
@@ -2216,20 +2126,14 @@ function make_seneca( initial_options ) {
     }
   }
 
-
-
   root.gate = function() {
     var gated = this.delegate({gate$:true})
     return gated
   }
-
-
   root.ungate = function() {
     var ungated = this.delegate({gate$:false})
     return ungated
   }
-
-
 
   // Add builtin actions.
   root.add( {role:'seneca',  stats:true},  action_seneca_stats )
@@ -2239,8 +2143,6 @@ function make_seneca( initial_options ) {
 
   cmdline.handle( root, argv )
 
-
-
   // Define builtin actions.
 
   function action_seneca_close(args,done) {
@@ -2248,17 +2150,16 @@ function make_seneca( initial_options ) {
     done()
   }
 
-
   function action_seneca_ready(args,done) {
     private$.wait_for_ready = false
     this.emit('ready')
     done()
   }
 
-
-  function action_seneca_stats( args, done ) {
+  function async action_seneca_stats( args ) {
     var stats
 
+    // TODO: await stats
     if( args.pattern && private$.stats.actmap[args.pattern] ) {
       stats = private$.stats.actmap[args.pattern]
       stats.time = private$.timestats.calculate(args.pattern)
@@ -2285,18 +2186,19 @@ function make_seneca( initial_options ) {
       }
     }
 
-    done(null,stats)
+    // done(null,stats)
   }
 
 
-  function action_options_get( args, done ) {
+  function async action_options_get( args ) {
     var options = private$.optioner.get()
 
     var base = args.base || null
     var root = base ? (options[base]||{}) : options
     var val  = args.key ? root[args.key] : root
 
-    done(null,common.copydata(val))
+    await common.copydata(val);
+    // done(null,common.copydata(val))
   }
 
 
@@ -2587,12 +2489,12 @@ function thrower(err) {
 
 // Callpoint resolver. Indicates location in calling code.
 function make_callpoint( active ) {
-  if( active ) { 
+  if( active ) {
     return function() {
       return error.callpoint(
         new Error(),
         ['/seneca/seneca.js','/seneca/lib/', '/lodash.js'] )
-    } 
+    }
 
   } else return _.noop;
 }
