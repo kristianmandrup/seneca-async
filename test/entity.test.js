@@ -7,8 +7,9 @@
 var util   = require('util')
 var assert  = require('assert')
 
-var seneca      = require('..')
-var make_entity = require('../lib/entity')
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var make_entity = lib.entity
 
 var async   = require('async')
 var gex     = require('gex')

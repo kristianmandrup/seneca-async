@@ -4,10 +4,9 @@
 
 var assert = require('assert')
 
-
-var seneca_module = require('..')
-var common = require('../lib/common')
-
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var common = lib.common
 
 var gex = require('gex')
 var Lab = require('lab')
@@ -22,7 +21,7 @@ var it       = lab.it
 describe('delegation', function(){
 
   it('happy', function(done) {
-    var si  = seneca_module(testopts)
+    var si  = seneca(testopts)
     si.add({c:'C'},function(args,cb){
       cb(null,args)
     })
@@ -46,7 +45,7 @@ describe('delegation', function(){
 
 
   it('dynamic', function(done) {
-    var si = seneca_module(testopts)
+    var si = seneca(testopts)
     si.add({c:'C'},function(args,cb){
       //console.log('C='+this)
       cb(null,args)
@@ -86,7 +85,7 @@ describe('delegation', function(){
 
   it('logging.actid',function(done){
     var fail
-    var si = seneca_module({
+    var si = seneca({
       log:{
         map:[{handler:function(){
         if( 'aaa'==arguments[6] ) {
@@ -135,7 +134,7 @@ describe('delegation', function(){
 
 
   it('parent', function(done) {
-    var si  = seneca_module(testopts)
+    var si  = seneca(testopts)
     si.add({c:'C'},function(args,cb){
       //console.log('C='+this)
       args.a=1
@@ -160,7 +159,7 @@ describe('delegation', function(){
 
 
   it('parent.plugin',function(done){
-    var si = seneca_module(testopts)
+    var si = seneca(testopts)
 
     si.use(function(opts){
       this.add({a:'A'},function(args,cb){

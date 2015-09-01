@@ -4,8 +4,9 @@
 
 var assert  = require('assert')
 
-var common = require('../lib/common')
-var seneca = require('..')
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var common = lib.common
 
 var gex = require('gex')
 var Lab = require('lab')

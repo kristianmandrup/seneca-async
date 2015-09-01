@@ -16,12 +16,12 @@ var init  = require('./seneca/init');
 var stats        = require('rolling-stats');
 
 // Internal modules.
-var common        = require('./lib/common');
-
 // Create utilities.
 var arr = common.arrayify
+
+module.exports.lib = require('./lib');
 
 // Module exports.
 // Primary export function, creates a new Seneca instance.
 // function init( seneca_options, more_options )
-module.exports = require('./seneca/init');
+module.exports.seneca = require('./seneca/init');

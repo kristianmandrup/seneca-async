@@ -6,6 +6,7 @@ const $ = require('gulp-load-plugins')();
 const del = require('del');
 const glob = require('glob');
 const path = require('path');
+const print = require('gulp-print');
 const isparta = require('isparta');
 const babelify = require('babelify');
 const watchify = require('watchify');
@@ -14,6 +15,8 @@ const esperanto = require('esperanto');
 const browserify = require('browserify');
 const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
+
+const rollup = require( 'rollup' );
 
 // Gather the library data from `package.json`
 const manifest = require('./package.json');
@@ -60,6 +63,7 @@ function jscsNotify(file) {
 // Build two versions of the library
 // 'lint-src'
 gulp.task('build', ['clean'], function(done) {
+  // rollup.rollup({
   esperanto.bundle({
     base: 'src',
     entry: config.entryFileName,
@@ -105,7 +109,7 @@ function getBundler() {
   // Our browserify bundle is made up of our unit tests, which
   // should individually load up pieces of our application.
   // We also include the browserify setup file.
-  var testFiles = glob.sync('./test/unit/**/*');
+  var testFiles = glob.sync('./test/**/*.test.js');
   var allFiles = ['./test/setup/browserify.js'].concat(testFiles);
 
   // Create our bundler, passing in the arguments required for watchify
@@ -131,10 +135,35 @@ gulp.task('browserify', function() {
   return bundle(getBundler());
 });
 
+var plumber = require('gulp-plumber')
+
+var _gulpsrc = gulp.src;
+gulp.src = function() {
+    return _gulpsrc.apply(gulp, arguments)
+    .pipe(plumber({
+        errorHandler: function(err) {
+            notify.onError({
+                title:    "Gulp Error",
+                message:  "Error: <%= error.message %>",
+                sound:    "Bottle"
+            })(err);
+            this.emit('end');
+        }
+    }));
+};
+
 function test() {
-  return gulp.src(['test/setup/node.js', 'test/unit/**/*.js'], {read: false})
+  return gulp.src(['test/setup/node.js', 'test/*.test.js'], {read: false})
+    .pipe(print())
+    .on('err', function(e) {
+      console.log(e.err.stack);
+    })
+    .on('task_err', function(e) {
+      console.log(e.err.stack);
+    })
     .pipe($.mocha({reporter: 'dot', globals: config.mochaGlobals}));
 }
+
 
 // 'lint-test', 'lint-src'
 gulp.task('coverage', [], function(done) {

@@ -10,8 +10,9 @@ var util   = require('util')
 var stream = require('stream')
 var assert = require('assert')
 
-var common = require('../lib/common')
-var seneca = require('..')
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var common = lib.common
 
 var gex          = require('gex')
 var parambulator = require('parambulator')
@@ -1134,7 +1135,7 @@ describe('seneca', function(){
       assert.equal(1,out.x)
     })
 
-    si.act({id$:'a/B',a:1},function(err,out){ 
+    si.act({id$:'a/B',a:1},function(err,out){
       if(err) return done(err);
 
       assert.equal(2,out.x)
@@ -1144,7 +1145,7 @@ describe('seneca', function(){
 
         assert.equal(3,out.x)
 
-        si.act({id$:'a/B',a:1},function(err,out){ 
+        si.act({id$:'a/B',a:1},function(err,out){
           if(err) return done(err);
 
           assert.equal(2,out.x)

@@ -4,18 +4,17 @@
 
 var assert = require('assert')
 
-
-var seneca = require('..')
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var common = lib.common
 
 var gex = require('gex')
 var _   = require('lodash')
 var Lab = require('lab')
 
-
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe
 var it       = lab.it
-
 
 var testopts = {log:'test'}
 
@@ -118,7 +117,7 @@ describe('prior', function() {
           .add( 'c:1,d:1,strict$:{add:true}', order_called(1) )
           .act( 'c:1,d:1', function( err, out ) {
             assert.deepEqual( out.order, [1] )
-            
+
             fin()
           })
       })
@@ -139,13 +138,13 @@ describe('prior', function() {
           .add( 'c:1,d:1,strict$:{add:false}', order_called(1) )
           .act( 'c:1,d:1', function( err, out ) {
             assert.deepEqual( out.order, [1, 2] )
-            
+
             fin()
           })
       })
   })
 
-  
+
 
 })
 

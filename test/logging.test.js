@@ -5,8 +5,9 @@ var util   = require('util')
 
 var Lab = require('lab')
 
-var logging = require('../lib/logging')
-
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var logging = lib.logging
 
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe

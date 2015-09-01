@@ -4,7 +4,10 @@
 
 var assert   = require('assert')
 var lab      = exports.lab = require('lab').script()
-var seneca   = require('..')
+
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+
 var testopts = {log:'test'}
 
 

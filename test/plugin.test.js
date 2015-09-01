@@ -9,7 +9,9 @@ var assert = require('assert')
 var _   = require('lodash')
 var Lab = require('lab')
 
-var seneca = require('..')
+var seneca = require('../dist/seneca')
+var lib = seneca.lib
+var common = lib.common
 
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe

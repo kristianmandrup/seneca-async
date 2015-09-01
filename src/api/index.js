@@ -21,7 +21,7 @@ module.exports = function(root) {
     log_route: require('./log_route'),
     make: require('./make'),
     options: require('./options')(root),
-    pin: require('./pin'),
+    pin: require('./pin')(root),
     plugin: require('./plugin'),
     ready: require('./ready'),
     register: require('./register'),
