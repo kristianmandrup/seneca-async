@@ -1,48 +1,53 @@
 var _            = require('lodash');
+var refnid       = require('../utils/tools').refnid;
 
-module.exports = function api_delegate(fixedargs) {
-  var self = this
+module.exports = function(root) {
+  var so = root.so;
 
-  var delegate = Object.create(self)
-  var act = self.act
+  return function api_delegate(fixedargs) {
+    var self = this
 
-  delegate.did = refnid()
+    var delegate = Object.create(self)
+    var act = self.act
 
-  var strdesc
-  delegate.toString = function() {
-    if( strdesc ) return strdesc;
-    var vfa = {}
-    _.each(fixedargs,function(v,k) {
-      if( ~k.indexOf('$') ) return;
-      vfa[k]=v
-    })
+    delegate.did = refnid()
 
-    strdesc = self.toString()+
-      (_.keys(vfa).length?'/'+jsonic.stringify(vfa):'')
+    var strdesc
+    delegate.toString = function() {
+      if( strdesc ) return strdesc;
+      var vfa = {}
+      _.each(fixedargs,function(v,k) {
+        if( ~k.indexOf('$') ) return;
+        vfa[k]=v
+      })
 
-    return strdesc
+      strdesc = self.toString()+
+        (_.keys(vfa).length?'/'+jsonic.stringify(vfa):'')
+
+      return strdesc
+    }
+
+    delegate.fixedargs = ( so.strict.fixedargs ?
+                           _.extend({}, fixedargs,self.fixedargs) :
+                           _.extend({}, self.fixedargs,fixedargs) )
+
+    delegate.delegate = function(further_fixedargs) {
+      var args = _.extend({}, delegate.fixedargs, further_fixedargs||{})
+      return self.delegate.call(this,args)
+    }
+
+    // Somewhere to put contextual data for this delegate.
+    // For example, data for individual web requests.
+    delegate.context = {}
+
+    delegate.client = function() {
+      return self.client.call(this, arguments)
+    }
+
+    delegate.listen = function() {
+      return self.listen.call(this, arguments)
+    }
+
+    return delegate
   }
-
-  delegate.fixedargs = ( so.strict.fixedargs ?
-                         _.extend({}, fixedargs,self.fixedargs) :
-                         _.extend({}, self.fixedargs,fixedargs) )
-
-  delegate.delegate = function(further_fixedargs) {
-    var args = _.extend({}, delegate.fixedargs, further_fixedargs||{})
-    return self.delegate.call(this,args)
-  }
-
-  // Somewhere to put contextual data for this delegate.
-  // For example, data for individual web requests.
-  delegate.context = {}
-
-  delegate.client = function() {
-    return self.client.call(this, arguments)
-  }
-
-  delegate.listen = function() {
-    return self.listen.call(this, arguments)
-  }
-
-  return delegate
 }

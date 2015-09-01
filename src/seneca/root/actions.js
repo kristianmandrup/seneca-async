@@ -6,4 +6,5 @@ module.exports.decorate = function decorate(root) {
   root.add( {role:'seneca',  ready:true},  action.ready )
   root.add( {role:'seneca',  cmd:'close'}, action.close )
   root.add( {role:'options', cmd:'get'},   action.options_get  )
+  return root;
 }

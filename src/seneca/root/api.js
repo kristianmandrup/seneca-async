@@ -3,7 +3,7 @@ var extend = require('extend')
 
 module.exports.decorate = function decorate(root) {
   // Seneca methods. Official API.
-  root = extend(root, api)
+  root = extend(root, api(root))
 
   // Method aliases.
   root.make$      = api.make

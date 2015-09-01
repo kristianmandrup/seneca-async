@@ -1,5 +1,5 @@
 var _            = require('lodash');
-var common       = require('./lib/common');
+var common       = require('../lib/common');
 
 module.exports = {
   close: async function action_seneca_close(args) {

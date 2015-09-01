@@ -1,5 +1,4 @@
 var _          = require('lodash');
-var nid        = require('nid');
 var patrun     = require('patrun');
 var makeuse      = require('use-plugin');
 var lrucache     = require('lru-cache');
@@ -9,6 +8,7 @@ var make_entity   = require('../lib/entity');
 var make_optioner = require('../lib/optioner');
 var logging       = require('../lib/logging');
 var common        = require('../lib/common');
+var cmdline       = require('../lib/cmdline');
 var make          = require('../make');
 
 // Create a new Seneca instance.
@@ -22,21 +22,14 @@ module.exports = function make_seneca( initial_options ) {
   var private$ = make.make_private();
 
   // Create a new root Seneca instance.
-  var root = require('./root')
+  var root = require('./root')(private$, initial_options);
+  var so = root.so;
 
   // Create internal tools.
-  var actnid     = nid({length:5})
-  var refnid     = function(){ return '('+actnid()+')' }
   var argv       = cmdline(root)
 
   // Not needed after this point, and screws up debug printing.
   delete initial_options.module
-
-  require('./private/optioner').bind(this)(private$)
-
-  // Define options
-  var so = require('./so')(private$, initial_options)
-  var callpoint = make_callpoint( so.debug.callpoint )
 
   // TODO: debug here!!!
   require('./private').bind(this)(private$, so)

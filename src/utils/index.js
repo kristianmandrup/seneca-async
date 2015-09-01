@@ -1,5 +1,7 @@
-var _   = require('lodash');
-var gex          = require('gex');
+var _             = require('lodash');
+var gex           = require('gex');
+var console_error = require('../console').error;
+var util = require('util')
 // Utilities
 
 module.exports.makedie = function makedie( instance, ctxt ) {
@@ -33,11 +35,11 @@ module.exports.makedie = function makedie( instance, ctxt ) {
       stack = stack.replace(/^.*?\n/,'\n')
 
       var procdesc = '\n  pid='+process.pid+
-            ', arch='+process.arch+
-            ', platform='+process.platform+
-            ',\n  path='+process.execPath+
-            ',\n  argv='+util.inspect(process.argv).replace(/\n/g,'')+
-            ',\n  env='+util.inspect(process.env).replace(/\n/g,'')
+            ', arch=' + process.arch+
+            ', platform=' + process.platform+
+            ',\n  path=' + process.execPath+
+            ',\n  argv=' + util.inspect(process.argv).replace(/\n/g,'')+
+            ',\n  env=' + util.inspect(process.env).replace(/\n/g,'')
 
       var fatalmodemsg = instance.fixedargs.fatal$ ?
             '\n  ALL ERRORS FATAL: action called with argument fatal$:true '+

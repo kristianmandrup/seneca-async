@@ -1,5 +1,5 @@
 // Default options.
-var DEFAULT_OPTIONS = {
+module.exports = {
 
   // Tag this Seneca instance, will be appended to instance identifier.
   tag:             '-',

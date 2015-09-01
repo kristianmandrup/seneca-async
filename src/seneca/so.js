@@ -1,8 +1,12 @@
-var make       = require('../make');
-var paramcheck = make.make_paramcheck()
+var make        = require('../make');
+var paramcheck  = make.make_paramcheck()
+var utils       = require('../utils')
+var thrower     = utils.thrower
+var pin_patrun_customizer = utils.pin_patrun_customizer
+var patrun      = require('patrun')
 
-module.exports = function(private$, initial_options)
-  private$.optioner.set( initial_options )
+module.exports = function(private$, initial_options) {
+  var so = private$.optioner.set( initial_options )
   paramcheck.options.validate(so, thrower)
 
   // These need to come from options as required during construction.

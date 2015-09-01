@@ -1,3 +1,8 @@
+var stats        = require('rolling-stats')
+var common       = require('../../lib/common')
+var makeuse      = require('use-plugin');
+var lrucache     = require('lru-cache');
+
 module.exports = function(private$, so) {
   var so = this.so || so;
 
@@ -24,7 +29,7 @@ module.exports = function(private$, so) {
   }
 
   private$.plugins      = {}
-  private$.exports      = { options: common.deepextend({},so) }
+  private$.exports      = { options: common.deepextend({}, so) }
   private$.plugin_order = { byname:[], byref:[] }
   private$.use          = makeuse({
     prefix:    'seneca-',
