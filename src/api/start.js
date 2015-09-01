@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var zig          = require('zig');
+
 module.exports = function api_start( errhandler ) {
   var sd = this.delegate()
   var options = sd.options()

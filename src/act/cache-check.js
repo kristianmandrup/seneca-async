@@ -1,3 +1,4 @@
+var _            = require('lodash');
 // Check if actid has already been seen, and if action cache is active,
 // then provide cached result, if any. Return true in this case.
 //

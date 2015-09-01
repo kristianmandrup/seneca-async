@@ -1,3 +1,7 @@
+var _            = require('lodash');
+var jsonic       = require('jsonic');
+var common       = require('./lib/common');
+
 module.exports = function api_repl(in_opts) {
   var self = this
 

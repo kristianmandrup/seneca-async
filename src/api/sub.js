@@ -1,3 +1,5 @@
+var _            = require('lodash');
+
 module.exports = function api_sub() {
   var self = this
 

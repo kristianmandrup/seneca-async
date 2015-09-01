@@ -1,3 +1,5 @@
+var _            = require('lodash');
+
 module.eports = function api_cluster() {
   /* jshint loopfunc:true */
   var self = this

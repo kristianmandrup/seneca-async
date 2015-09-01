@@ -1,3 +1,5 @@
+var logging      = require('./lib/logging');
+
 module.exports = function api_options( options ) {
   var self = this
 

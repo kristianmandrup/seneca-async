@@ -1,6 +1,5 @@
 /* Copyright (c) 2013-2015 Richard Rodger, MIT License */
-"use strict";
-
+'use strict';
 
 // mocha plugin.test.js
 
@@ -12,11 +11,9 @@ var Lab = require('lab')
 
 var seneca = require('..')
 
-
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe
 var it       = lab.it
-
 
 describe('plugin', function(){
 

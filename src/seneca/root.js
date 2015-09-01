@@ -1,6 +1,14 @@
+'use strict';
+
+var _            = require('lodash');
+var nid          = require('nid');
+var jsonic       = require('jsonic');
+var patrun       = require('patrun');
+var logging      = require('./lib/logging');
+var common       = require('./lib/common');
+
 // Create a new root Seneca instance.
 var root = new Seneca();
-
 
 // Define public member variables.
 root.root       = root;
@@ -8,7 +16,6 @@ root.start_time = Date.now();
 root.fixedargs  = {};
 root.context    = {};
 root.version    = VERSION;
-
 
 // Seneca methods. Official API.
 root.add        = api_add        // Add a message pattern and action.

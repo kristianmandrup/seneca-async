@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var common       = require('./lib/common');
+
 module.exports = function api_pin( pattern, pinopts ) {
   var thispin = this
 
@@ -10,9 +13,7 @@ module.exports = function api_pin( pattern, pinopts ) {
     }
   }
 
-
   var methods = private$.actrouter.list(pattern)
-
 
   var api = {
     toString: function() {

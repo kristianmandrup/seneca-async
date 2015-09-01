@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var common       = require('./lib/common');
+
 // Check if action parameters pass parambulator spec, if any.
 //
 //    * _args_     (object)    &rarr;  action arguments

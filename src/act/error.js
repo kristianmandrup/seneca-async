@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var logging      = require('../lib/logging');
+
 module.exports = function act_error( instance, err, actmeta, result,
                     duration, callargs, prior_ctxt, act_callpoint )
 {

@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var logging      = require('./lib/logging');
+
 module.exports = function act_make_delegate( instance, tx, callargs, actmeta, prior_ctxt ) {
   var delegate_args = {}
   if( null != callargs.gate$ ) {

@@ -1,7 +1,7 @@
 /* Copyright (c) 2013-2015 Richard Rodger, MIT License */
 /* jshint node:true, asi:true, eqnull:true */
 
-"use strict";
+'use strict';
 
 var fs   = require('fs')
 var util = require('util')
@@ -9,7 +9,6 @@ var util = require('util')
 var _      = require('lodash')
 var patrun = require('patrun')
 var jsonic = require('jsonic')
-
 var error  = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()})
 
 var common = require('./common')

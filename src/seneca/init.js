@@ -1,3 +1,6 @@
+var _         = require('lodash');
+var logging   = require('./lib/logging');
+
 // Primary export function, creates a new Seneca instance.
 module.exports = function init( seneca_options, more_options ) {
 

@@ -1,5 +1,6 @@
 "use strict";
 var _            = require('lodash');
+var norma        = require('norma');
 
 module.exports = function api_depends() {
   var self = this

@@ -1,3 +1,8 @@
+var _            = require('lodash');
+var norma        = require('norma');
+var logging      = require('./lib/logging');
+var common       = require('./lib/common');
+
 module.exports.act_if = function api_act_if() {
   var self = this
   var args = norma('{execute:b actargs:.*}',arguments)
@@ -7,8 +12,6 @@ module.exports.act_if = function api_act_if() {
   }
   else return self;
 }
-
-
 
 // Perform an action. The properties of the first argument are matched against
 // known patterns, and the most specific one wins.

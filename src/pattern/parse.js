@@ -1,3 +1,7 @@
+var _   = require('lodash');
+var norma        = require('norma');
+var jsonic       = require('jsonic');
+
 // string args override object args
 module.exports = function parse_pattern(instance,args,normaspec,fixed) {
   args = norma('{strargs:s? objargs:o? moreobjargs:o? '+(normaspec||'')+'}', args)

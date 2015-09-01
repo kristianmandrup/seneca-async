@@ -1,3 +1,5 @@
+var _   = require('lodash');
+var gex          = require('gex');
 // Utilities
 
 module.exports.makedie = function makedie( instance, ctxt ) {

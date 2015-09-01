@@ -1,3 +1,6 @@
+var jsonic       = require('jsonic');
+var _            = require('lodash');
+
 module.exports = function api_find(args) {
   var local  = true
   var remote = true

@@ -1,6 +1,6 @@
 /* Copyright (c) 2014-2015 Richard Rodger, MIT License */
 /* jshint node:true, asi:true, eqnull:true */
-"use strict";
+'use strict';
 
 var fs = require('fs');
 var _      = require('lodash');
@@ -8,6 +8,7 @@ var jsonic = require('jsonic');
 var error  = require('eraro')({package:'seneca',msgmap:ERRMSGMAP()});
 var logging = require('./logging');
 var common  = require('./common');
+var jsonic       = require('jsonic');
 
 module.exports = function( argv, callmodule, defaults ) {
   var DEFAULT_OPTIONS_FILE = './seneca.options.js'

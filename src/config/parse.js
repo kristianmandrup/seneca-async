@@ -1,3 +1,5 @@
+var _            = require('lodash');
+
 module.exports = function parseConfig( args, options ) {
   var out = {}
 

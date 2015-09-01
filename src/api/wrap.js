@@ -1,3 +1,5 @@
+var _            = require('lodash');
+
 module.exports = function api_wrap(pin,wrapper) {
   var pinthis = this
 

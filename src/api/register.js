@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var plugin_util   = require('./lib/plugin-util');
+
 function api_register( plugin ) {
   var self = this
 

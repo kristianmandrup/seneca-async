@@ -1,3 +1,5 @@
+var _            = require('lodash');
+
 function api_listen() {
   var self = this
 

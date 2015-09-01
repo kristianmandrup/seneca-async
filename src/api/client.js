@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var cmdline      = require('./lib/cmdline');
+
 module.exports = function api_client() {
   var self = this
 

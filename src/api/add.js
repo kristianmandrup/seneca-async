@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var parambulator = require('parambulator');
+var common       = require('./lib/common');
 
 // ### seneca.add
 // Add an message pattern and action function.

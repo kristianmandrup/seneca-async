@@ -1,3 +1,4 @@
+var _            = require('lodash');
 // useful when defining services!
 // note: has EventEmitter.once semantics
 // if using .on('ready',fn) it will be be called for each ready event

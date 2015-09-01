@@ -1,6 +1,6 @@
 /* Copyright (c) 2010-2015 Richard Rodger, MIT License */
 /* jshint node:true, asi:true, eqnull:true */
-"use strict";
+'use strict';
 
 var util = require('util');
 var _   = require('lodash');

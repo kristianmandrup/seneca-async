@@ -1,3 +1,6 @@
+var _            = require('lodash');
+var jsonic       = require('jsonic');
+
 module.exports = function api_list( args ) {
   args = _.isString(args) ? jsonic(args) : args
 
