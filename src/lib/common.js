@@ -6,31 +6,34 @@ var util = require('util');
 var _   = require('lodash');
 var nid = require('nid');
 
-exports.tagnid = nid({length:3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
+module.exports.tagnid = nid({length:3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
 
-function arrayify(){ return Array.prototype.slice.call(arguments[0],arguments[1]) }
-exports.arrayify = arrayify
+function arrayify() {
+  return Array.prototype.slice.call(arguments[0],arguments[1])
+}
 
-exports.delegate = function( scope, func ) {
+module.exports.arrayify = arrayify
+
+module.exports.delegate = function( scope, func ) {
   var args = Array.prototype.slice.call(arguments,2)
   return function() {
     return func.apply(scope,args.concat(Array.prototype.slice.call(arguments)))
   }
 }
 
-exports.noop = function noop() {
+module.exports.noop = function noop() {
   // does nothing
 }
 
 // TODO: are any of the below used?
-var conf = exports.conf = {}
+var conf = module.exports.conf = {}
 
-var die = exports.die = function(msg) {
+var die = module.exports.die = function(msg) {
   console.error(msg)
   process.exit(1)
 }
 
-var copydata = exports.copydata = function(obj) {
+var copydata = module.exports.copydata = function(obj) {
   var copy
 
   // Handle the 3 simple types, and null or undefined
@@ -65,7 +68,7 @@ var copydata = exports.copydata = function(obj) {
 }
 
 
-exports.argpattern = function argpattern( args ) {
+module.exports.argpattern = function argpattern( args ) {
   args = args || {}
   var sb = []
   _.each( args, function(v,k){
@@ -80,7 +83,7 @@ exports.argpattern = function argpattern( args ) {
 }
 
 // noop for callbacks
-exports.nil = function nil(){
+module.exports.nil = function nil(){
   _.each(arguments,function(arg){
     if( _.isFunction(arg) ) {
       return arg()
@@ -102,7 +105,7 @@ function clean(obj) {
   }
   return out
 }
-exports.clean = clean
+module.exports.clean = clean
 
 function deepextend() {
   var args = arrayify(arguments)
@@ -113,7 +116,7 @@ function deepextend() {
 
   return out
 }
-exports.deepextend = deepextend
+module.exports.deepextend = deepextend
 
 // TODO: can still fail if objects are too deeply complex
 // need a finite bound on recursion
@@ -180,7 +183,7 @@ function deepextend_impl(tar) {
 
 // loop over a list of items recursively
 // list can be an integer - number of times to recurse
-exports.recurse = async function recurse(list,work) {
+module.exports.recurse = async function recurse(list,work) {
   /* jshint validthis:true */
   try {
     var ctxt = this
@@ -212,7 +215,7 @@ exports.recurse = async function recurse(list,work) {
 // fixed: map of fixed values - cannot be overriden
 // omits: array of prop names to exclude
 // defaults, args, and fixed are deepextended together in that order
-exports.argprops = function argprops( defaults, args, fixed, omits){
+module.exports.argprops = function argprops( defaults, args, fixed, omits){
   omits = _.isArray(omits) ? omits :
     _.isObject(omits) ? _.keys(omits) :
     _.isString(omits) ? omits.split(/\s*,\s*/) :
@@ -227,7 +230,7 @@ exports.argprops = function argprops( defaults, args, fixed, omits){
   return _.omit( deepextend( defaults, usedargs, fixed ), omits )
 }
 
-exports.print = function print(err, out){
+module.exports.print = function print(err, out){
   if(err) throw err;
 
   console.log(util.inspect(out,{depth:null}))

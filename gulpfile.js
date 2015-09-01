@@ -142,6 +142,7 @@ var gulp_src = gulp.src;
 gulp.src = function() {
   return gulp_src.apply(gulp, arguments)
     .pipe($.plumber(function(error) {
+      console.log(error.stack);
       // Output an error message
       gutil.log(gutil.colors.red('Error (' + error.plugin + '): ' + error.message));
       // emit the end event, to properly end the task
