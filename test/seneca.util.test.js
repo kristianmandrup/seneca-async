@@ -12,9 +12,11 @@ var lab      = exports.lab = Lab.script()
 var describe = lab.describe
 var it       = lab.it
 
-var seneca = require('../dist/seneca')
-var lib = seneca.lib
-var common = lib.common
+// var seneca = require('../dist/seneca')
+// var lib = seneca.lib
+// var common = lib.common
+var seneca = require('../src/seneca')
+var common = require('../src/lib/common')
 
 describe('seneca.util', function() {
   var si = seneca(testopts)

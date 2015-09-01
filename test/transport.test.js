@@ -8,7 +8,7 @@ var util   = require('util')
 var assert  = require('assert')
 
 var common   = require('../src/lib/common')
-var seneca   = require('..')
+var seneca   = require('../src/seneca')
 
 var gex   = require('gex')
 var _     = require('lodash')

@@ -7,9 +7,11 @@
 var util   = require('util')
 var assert = require('assert')
 
-var seneca = require('../dist/seneca')
-var lib = seneca.lib
-var common = lib.common
+// var seneca = require('../dist/seneca')
+// var lib = seneca.lib
+// var common = lib.common
+var seneca = require('../src/seneca')
+var common = require('../src/lib/common')
 
 var gex = require('gex')
 var Lab = require('lab')

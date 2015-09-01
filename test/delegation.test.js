@@ -4,9 +4,12 @@
 
 var assert = require('assert')
 
-var seneca = require('../dist/seneca')
-var lib = seneca.lib
-var common = lib.common
+// var seneca = require('../dist/seneca')
+// var lib = seneca.lib
+// var common = lib.common
+
+var seneca = require('../src/seneca')
+var common = require('../src/lib/common')
 
 var gex = require('gex')
 var Lab = require('lab')
@@ -171,8 +174,8 @@ describe('delegation', function(){
     })
 
     si.act({a:'A'},function(err,out){
-      //console.dir( common.owndesc(out,0,true) )
-      assert.ok(gex("{a=A,actid$=*,p1=1}").on( common.owndesc(out,1,true)))
+      //console.dir( _module.owndesc(out,0,true) )
+      assert.ok(gex("{a=A,actid$=*,p1=1}").on( _module.owndesc(out,1,true)))
     })
 
 
@@ -190,7 +193,7 @@ describe('delegation', function(){
     })
 
     si.act({a:'A'},function(err,out){
-      //console.dir( common.owndesc(out,0,true) )
+      //console.dir( _module.owndesc(out,0,true) )
       assert.ok(gex("{a=A,actid$=*,p1=1,p2=1}").on( common.owndesc(out,1,true)))
     })
 

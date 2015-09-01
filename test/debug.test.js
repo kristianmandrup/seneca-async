@@ -5,14 +5,12 @@
 var assert   = require('assert')
 var lab      = exports.lab = require('lab').script()
 
-var seneca = require('../dist/seneca')
-var lib = seneca.lib
+// var seneca = require('../dist/seneca')
+// var lib = seneca.lib
 
 var testopts = {log:'test'}
 
-
 process.setMaxListeners(0)
-
 
 lab.experiment('debug', function(){
 

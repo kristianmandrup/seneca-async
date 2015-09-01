@@ -17,6 +17,7 @@ const runSequence = require('run-sequence');
 const source = require('vinyl-source-stream');
 
 const rollup = require( 'rollup' );
+const gutil = require( 'gulp-util' );
 
 // Gather the library data from `package.json`
 const manifest = require('./package.json');
@@ -135,21 +136,19 @@ gulp.task('browserify', function() {
   return bundle(getBundler());
 });
 
-// var plumber = require('gulp-plumber')
-// var _gulpsrc = gulp.src;
-// gulp.src = function() {
-//     return _gulpsrc.apply(gulp, arguments)
-//     .pipe(plumber({
-//         errorHandler: function(err) {
-//             notify.onError({
-//                 title:    "Gulp Error",
-//                 message:  "Error: <%= error.message %>",
-//                 sound:    "Bottle"
-//             })(err);
-//             this.emit('end');
-//         }
-//     }));
-// };
+// See: https://www.timroes.de/2015/01/06/proper-error-handling-in-gulp-js/
+
+var gulp_src = gulp.src;
+gulp.src = function() {
+  return gulp_src.apply(gulp, arguments)
+    .pipe($.plumber(function(error) {
+      // Output an error message
+      gutil.log(gutil.colors.red('Error (' + error.plugin + '): ' + error.message));
+      // emit the end event, to properly end the task
+      this.emit('end');
+    })
+  );
+};
 
 function test() {
   return gulp.src(['test/setup/node.js', 'test/*.test.js'], {read: false})

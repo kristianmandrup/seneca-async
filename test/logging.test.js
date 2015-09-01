@@ -5,14 +5,15 @@ var util   = require('util')
 
 var Lab = require('lab')
 
-var seneca = require('../dist/seneca')
-var lib = seneca.lib
-var logging = lib.logging
+// var seneca = require('../dist/seneca')
+// var lib = seneca.lib
+// var logging = lib.logging
+var seneca = require('../src/seneca')
+var logging = require('../src/lib/logging')
 
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe
 var it       = lab.it
-
 
 function fmt(r){ return r.toString(true).replace(/\s+/g,'') }
 
