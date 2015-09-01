@@ -21,6 +21,9 @@ module.exports = function make_seneca( initial_options ) {
   // Create a private context.
   var private$ = make_private();
 
+  // Create a new root Seneca instance.
+  var root = require('./root')
+
   // Create internal tools.
   var actnid     = nid({length:5})
   var refnid     = function(){ return '('+actnid()+')' }
@@ -157,5 +160,18 @@ module.exports = function make_seneca( initial_options ) {
 
   cmdline.handle( root, argv )
 
-  // Define builtin actions.
+  _.each( so.internal.close_signals, function(active,signal){
+    if(active) {
+      process.on(signal,function(){
+        root.close(function(err){
+          if( err ) console.error(err);
+          process.exit( err ? (null == err.exit ? 1 : err.exit) : 0 )
+        })
+      })
+    }
+  })
+
+  return root
+  }
+
 }

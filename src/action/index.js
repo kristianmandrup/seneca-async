@@ -2,14 +2,12 @@ var _            = require('lodash');
 var common       = require('./lib/common');
 
 module.exports = {
-  close: function action_seneca_close(args,done) {
-    this.emit('close')
-    done()
+  close: function async action_seneca_close(args) {
+    await this.emit('close')
   },
-  ready: function action_seneca_ready(args,done) {
+  ready: function action_seneca_ready(args) {
     private$.wait_for_ready = false
-    this.emit('ready')
-    done()
+    await this.emit('ready')
   },
   stats: function async action_seneca_stats( args ) {
     var stats
@@ -55,18 +53,3 @@ module.exports = {
   }
 
 }
-
-// TODO: Where does this fit!?
-// _.each( so.internal.close_signals, function(active,signal){
-//   if(active) {
-//     process.on(signal,function(){
-//       root.close(function(err){
-//         if( err ) console.error(err);
-//         process.exit( err ? (null == err.exit ? 1 : err.exit) : 0 )
-//       })
-//     })
-//   }
-// })
-//
-// return root
-// }

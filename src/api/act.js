@@ -3,19 +3,9 @@ var norma        = require('norma');
 var logging      = require('./lib/logging');
 var common       = require('./lib/common');
 
-module.exports.act_if = function api_act_if() {
-  var self = this
-  var args = norma('{execute:b actargs:.*}',arguments)
-
-  if( args.execute ) {
-    return self.act.apply( self, args.actargs )
-  }
-  else return self;
-}
-
 // Perform an action. The properties of the first argument are matched against
 // known patterns, and the most specific one wins.
-module.exports.act = function api_act() {
+module.exports = function api_act() {
   var self = this
 
   var spec    = parse_pattern( self, common.arrayify(arguments) )

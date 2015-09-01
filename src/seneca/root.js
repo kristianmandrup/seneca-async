@@ -17,47 +17,8 @@ root.fixedargs  = {};
 root.context    = {};
 root.version    = VERSION;
 
-// Seneca methods. Official API.
-root.add        = api_add        // Add a message pattern and action.
-root.act        = api_act        // Perform action that matches pattern.
-root.sub        = api_sub        // Subscribe to a message pattern.
-root.use        = api_use        // Define a plugin.
-root.make       = api_make       // Make a new entity object.
-root.listen     = api_listen     // Listen for inbound messages.
-root.client     = api_client     // Send outbound messages.
-root.export     = api_export     // Export plain objects from a plugin.
-root.has        = api_has        // True if action pattern defined.
-root.find       = api_find       // Find action by pattern
-root.list       = api_list       // List (a subset of) action patterns.
-root.ready      = api_ready      // Callback when plugins initialized.
-root.close      = api_close      // Close and shutdown plugins.
-root.options    = api_options    // Get and set options.
-root.repl       = api_repl       // Open a REPL on a local port.
-root.start      = api_start      // Start an action chain.
-root.error      = api_error      // Set global error handler.
-
-// Method aliases.
-root.make$      = api_make
-root.hasact     = api_has
-
-// Non-API methods.
-root.logroute   = api_logroute
-root.register   = api_register
-root.depends    = api_depends
-root.cluster    = api_cluster
-root.hasplugin  = api_hasplugin
-root.findplugin = api_findplugin
-root.pin        = api_pin
-root.actroutes  = api_actroutes
-root.act_if     = api_act_if
-root.wrap       = api_wrap
-root.seneca     = api_seneca
-root.fix        = api_fix
-root.delegate   = api_delegate
-
-// Legacy API; Deprecated.
-root.startrepl = api_repl
-root.findact   = api_find
+var api = require('./root/api')
+root = api.decorate(root);
 
 root.fail = make_legacy_fail( so )
 
@@ -184,7 +145,6 @@ root.ungate = function() {
 }
 
 // Add builtin actions.
-root.add( {role:'seneca',  stats:true},  action_seneca_stats )
-root.add( {role:'seneca',  ready:true},  action_seneca_ready )
-root.add( {role:'seneca',  cmd:'close'}, action_seneca_close )
-root.add( {role:'options', cmd:'get'},   action_options_get  )
+root = require('./root/actions').decorate(root);
+
+module.exports = root;
