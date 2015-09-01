@@ -2,14 +2,14 @@ var _            = require('lodash');
 var common       = require('./lib/common');
 
 module.exports = {
-  close: function async action_seneca_close(args) {
+  close: async function action_seneca_close(args) {
     await this.emit('close')
   },
-  ready: function action_seneca_ready(args) {
+  ready: async function action_seneca_ready(args) {
     private$.wait_for_ready = false
     await this.emit('ready')
   },
-  stats: function async action_seneca_stats( args ) {
+  stats: async function action_seneca_stats( args ) {
     var stats
 
     // TODO: await stats
@@ -41,7 +41,7 @@ module.exports = {
 
     // done(null,stats)
   },
-  options_get: function async action_options_get( args ) {
+  options_get: async function action_options_get( args ) {
     var options = private$.optioner.get()
 
     var base = args.base || null

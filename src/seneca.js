@@ -13,6 +13,9 @@ var net    = require('net');
 var repl   = require('repl');
 var assert = require('assert');
 var vm     = require('vm');
+var eraro  = require('eraro');
+var ERRMSGMAP = require('./error/msg-map');
+var init  = require('./seneca/init');
 
 // External modules.
 var stats        = require('rolling-stats');

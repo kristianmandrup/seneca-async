@@ -180,7 +180,7 @@ function deepextend_impl(tar) {
 
 // loop over a list of items recursively
 // list can be an integer - number of times to recurse
-exports.recurse = function async recurse(list,work) {
+exports.recurse = async function recurse(list,work) {
   /* jshint validthis:true */
   try {
     var ctxt = this

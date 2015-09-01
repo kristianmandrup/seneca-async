@@ -1,8 +1,9 @@
 var _         = require('lodash');
-var logging   = require('./lib/logging');
-
+var logging   = require('../lib/logging');
+var make_seneca = require('./factory');
 // Primary export function, creates a new Seneca instance.
-module.exports = function init( seneca_options, more_options ) {
+
+function init( seneca_options, more_options ) {
 
   // Create instance.
   var seneca = make_seneca( _.extend( {}, seneca_options, more_options ))
@@ -23,7 +24,6 @@ module.exports = function init( seneca_options, more_options ) {
 }
 
 
-
 // To reference builtin loggers when defining logging options.
 init.loghandler = logging.handlers
 
@@ -38,3 +38,5 @@ init.use = function() {
 if( require.main === module ) {
   init()
 }
+
+module.exports = init;

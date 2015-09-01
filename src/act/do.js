@@ -2,7 +2,7 @@ var _            = require('lodash');
 var logging      = require('./lib/logging');
 var common       = require('./lib/common');
 
-module.exports = function async do_act( instance, actmeta, prior_ctxt, origargs) {
+module.exports = async function do_act( instance, actmeta, prior_ctxt, origargs) {
   var args = _.clone(origargs)
   prior_ctxt = prior_ctxt || {chain:[],entry:true,depth:1}
 
