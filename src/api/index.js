@@ -12,6 +12,9 @@ module.exports = {
   error: require('./error'),
   export: require('./export'),
   find: require('./find'),
+  has: function api_has(args) {
+    return !!private$.actrouter.find(args)
+  },  
   list: require('./list'),
   listen: require('./listen'),
   log_route: require('./log_route'),

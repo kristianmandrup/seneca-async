@@ -1,8 +1,10 @@
 var _         = require('lodash');
 var logging   = require('../lib/logging');
 var make_seneca = require('./factory');
-// Primary export function, creates a new Seneca instance.
 
+var Seneca = require('./constructor')
+
+// Primary export function, creates a new Seneca instance.
 function init( seneca_options, more_options ) {
 
   // Create instance.

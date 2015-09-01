@@ -1,6 +1,6 @@
 // close seneca instance
 // sets public seneca.closed property
-module.exports = function async api_close() {
+module.exports = async function api_close() {
   var self = this
 
   self.closed = true

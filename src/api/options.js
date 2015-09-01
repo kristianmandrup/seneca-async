@@ -1,5 +1,6 @@
-var logging      = require('./lib/logging');
+var logging      = require('../lib/logging');
 
+// TODO: pass private$ !!
 module.exports = function api_options( options ) {
   var self = this
 

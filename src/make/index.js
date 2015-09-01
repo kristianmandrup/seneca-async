@@ -1,6 +1,9 @@
 var parambulator = require('parambulator');
 var _            = require('lodash');
-var common       = require('./lib/common');
+var common       = require('../lib/common');
+
+module.exports.make_entity   = require('../lib/entity');
+module.exports.make_optioner = require('../lib/optioner');
 
 // Private member variables of Seneca object.
 module.exports.make_private = function make_private() {

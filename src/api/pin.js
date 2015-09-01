@@ -1,5 +1,5 @@
 var _            = require('lodash');
-var common       = require('./lib/common');
+var common       = require('../lib/common');
 
 module.exports = function api_pin( pattern, pinopts ) {
   var thispin = this

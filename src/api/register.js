@@ -1,7 +1,8 @@
 var _            = require('lodash');
-var plugin_util   = require('./lib/plugin-util');
+var plugin_util   = require('../lib/plugin-util');
 
-function api_register( plugin ) {
+// TODO: pass private$
+module.exports = async function api_register( plugin ) {
   var self = this
 
   paramcheck.register.validate(plugin,thrower)

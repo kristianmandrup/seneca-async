@@ -150,12 +150,12 @@ Entity.prototype.save$ = async function(props) {
   var self = this
   var si   = self.private$.seneca
 
-  else if( _.isObject(props) ) {
+  if( _.isObject(props) ) {
     self.data$(props)
   }
 
-  // make async!
-  await si.act( self.private$.entargs({cmd:'save'}))
+  var action = self.private$.entargs({cmd:'save'});
+  await si.act(action)
   return self
 }
 
@@ -193,21 +193,22 @@ Entity.prototype.load$ = async function(qin) {
 
 // list zero or more
 // qin is optional, if omitted, list all
-Entity.prototype.list$ = function(qin) {
+Entity.prototype.list$ = async function(qin) {
   var self = this
-  var si   = self.private$.seneca
+  var si = self.private$.seneca
 
   var qent = self
   var q = qin
 
-  await si.act( self.private$.entargs({qent:qent ,q:q ,cmd:'list'}) )
+  var action = self.private$.entargs({qent: qent , q: q, cmd: 'list'})
+  await si.act( action )
 
   return self
 }
 
 // remove one or more
 // TODO: make qin optional, in which case, use id
-Entity.prototype.remove$ = function(qin) {
+Entity.prototype.remove$ = async function(qin) {
   var self = this
   var si   = self.private$.seneca
 
@@ -241,7 +242,7 @@ Entity.prototype.fields$ = function() {
 }
 
 /* TODO: is this still needed? */
-Entity.prototype.close$ = function() {
+Entity.prototype.close$ = async function() {
   var self = this
   var si   = self.private$.seneca
 

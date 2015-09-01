@@ -1,4 +1,4 @@
-var logging      = require('./lib/logging');
+var logging      = require('../lib/logging');
 
 module.exports = function api_logroute(entry,handler) {
   if( 0 === arguments.length ) return root.log.router.toString()

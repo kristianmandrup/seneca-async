@@ -1,4 +1,5 @@
 var api = require('../../api')
+var extend = require('extend')
 
 module.exports.decorate = function decorate(root) {
   // Seneca methods. Official API.

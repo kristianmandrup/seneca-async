@@ -1,7 +1,7 @@
-var _            = require('lodash');
-var cmdline      = require('./lib/cmdline');
+var _           = require('lodash');
+var common      = require('../lib/common');
 
-module.exports = function api_client() {
+module.exports = async function api_client() {
   var self = this
 
   self.log.info.apply(self,_.flatten([
@@ -68,7 +68,7 @@ module.exports = function api_client() {
 
       // Process any messages waiting for this client,
       // before bringing client online.
-      function sendnext() {
+      async function sendnext() {
         if( 0 === sendqueue.length ) {
           sendclient = liveclient
           self.log.debug('client','sendqueue-clear',config)

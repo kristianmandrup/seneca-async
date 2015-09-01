@@ -4,11 +4,8 @@
 'use strict';
 
 // Current version, access using _seneca.version_ property.
-var VERSION = '0.6.4'
 
 // Node API modules
-var util   = require('util');
-var events = require('events');
 var net    = require('net');
 var repl   = require('repl');
 var assert = require('assert');
@@ -36,12 +33,3 @@ var error = eraro({
 // Primary export function, creates a new Seneca instance.
 // function init( seneca_options, more_options )
 module.exports = require('./seneca/init');
-
-// ### Declarations
-
-// Seneca is an EventEmitter.
-function Seneca() {
-  events.EventEmitter.call(this)
-  this.setMaxListeners(0)
-}
-util.inherits(Seneca, events.EventEmitter)

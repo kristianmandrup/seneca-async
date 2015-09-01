@@ -4,8 +4,12 @@ var _            = require('lodash');
 var nid          = require('nid');
 var jsonic       = require('jsonic');
 var patrun       = require('patrun');
-var logging      = require('./lib/logging');
-var common       = require('./lib/common');
+var logging      = require('../lib/logging');
+var common       = require('../lib/common');
+var make         = require('../make');
+
+var Seneca = require('./constructor')
+var VERSION = '0.6.4'
 
 // Create a new root Seneca instance.
 var root = new Seneca();
@@ -20,7 +24,8 @@ root.version    = VERSION;
 var api = require('./root/api')
 root = api.decorate(root);
 
-root.fail = make_legacy_fail( so )
+// TODO: fix so!!!
+root.fail = make.make_legacy_fail( so )
 
 // Identifier generator.
 root.idgen = nid({length:so.idlen})
