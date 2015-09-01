@@ -3,6 +3,7 @@
 
 
 // mocha common.test.js
+import 'mochawait';
 
 var util = require('util')
 var assert = require('assert')

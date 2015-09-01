@@ -9,3 +9,21 @@ Development
 -----------
 
 Run `npm test` and start debugging... ;)
+
+http://derpturkey.com/testing-asyncawait-with-babel-and-mocha/
+
+See https://github.com/bmancini55/babel-mocha-test
+
+```js
+require('babel/register')({  
+  'optional': [ 'es7.asyncFunctions' ]
+});
+```
+
+```json
+{
+  "scripts": {
+    "test": "mocha --require mocha-babel"
+  }
+}
+```
