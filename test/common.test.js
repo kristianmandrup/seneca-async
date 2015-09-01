@@ -19,7 +19,6 @@ var it       = lab.it
 
 describe('common', function(){
 
-
   it('deepextend-empty', function(done) {
 
     assert.equal(null, common.deepextend({}).a )

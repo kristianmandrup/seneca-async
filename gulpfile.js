@@ -135,22 +135,21 @@ gulp.task('browserify', function() {
   return bundle(getBundler());
 });
 
-var plumber = require('gulp-plumber')
-
-var _gulpsrc = gulp.src;
-gulp.src = function() {
-    return _gulpsrc.apply(gulp, arguments)
-    .pipe(plumber({
-        errorHandler: function(err) {
-            notify.onError({
-                title:    "Gulp Error",
-                message:  "Error: <%= error.message %>",
-                sound:    "Bottle"
-            })(err);
-            this.emit('end');
-        }
-    }));
-};
+// var plumber = require('gulp-plumber')
+// var _gulpsrc = gulp.src;
+// gulp.src = function() {
+//     return _gulpsrc.apply(gulp, arguments)
+//     .pipe(plumber({
+//         errorHandler: function(err) {
+//             notify.onError({
+//                 title:    "Gulp Error",
+//                 message:  "Error: <%= error.message %>",
+//                 sound:    "Bottle"
+//             })(err);
+//             this.emit('end');
+//         }
+//     }));
+// };
 
 function test() {
   return gulp.src(['test/setup/node.js', 'test/*.test.js'], {read: false})
