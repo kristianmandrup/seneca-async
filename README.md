@@ -12,6 +12,8 @@ Run `npm test` and start debugging... ;)
 
 http://derpturkey.com/testing-asyncawait-with-babel-and-mocha/
 
+At this point I have taken the liberty to move most of the tests into the `temp` folder. Make the first test pass (ie. `test/common.test.js`) then move each test one at a time into `test` folder and make each one pass before moving on. When all tests pass, seneca-async should be fully functional with async/await! Welcome to the future!!!
+
 See https://github.com/bmancini55/babel-mocha-test
 
 ```js
