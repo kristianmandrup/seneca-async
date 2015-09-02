@@ -14,7 +14,7 @@
     "coverage": "gulp coverage"
   },
   "description": "Senaca using ES7 async functions",
-  "main": "dist/seneca.js",
+  "main": "src/seneca.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/kristianmandrup/seneca-async.git"
@@ -100,7 +100,7 @@
     "watchify": "^3.3.1"
   },
   "babelBoilerplateOptions": {
-    "entryFileName": "seneca",
+    "entryFileName": "src/seneca",
     "mainVarName": "seneca",
     "mochaGlobals": [
       "stub",

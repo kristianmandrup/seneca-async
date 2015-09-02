@@ -27,3 +27,14 @@ require('babel/register')({
   }
 }
 ```
+
+Looks like npm test uses the npm `"main"` entry to see where to pick up the tests? If I change it to point to `dist/seneca.js`. If I change it to `"main": "src/seneca.js"` it seems to work. Please feel free to fix this using a better way! The `"main"` entry is also used for exporting the compiled distribution file on inclusion of the package!
+
+```sh
+Error: Cannot find module './seneca/init'
+    at Function.Module._resolveFilename (module.js:336:15)
+    at Function.Module._load (module.js:286:25)
+    at Module.require (module.js:365:17)
+    at require (module.js:384:17)
+    at /Users/kristianmandrup/repos/test123/senaca-projects/seneca-async/dist/seneca.js:18:13
+```
