@@ -1,5 +1,6 @@
 var _         = require('lodash');
 var logging   = require('../lib/logging');
+var common   = require('../lib/common');
 var make_seneca = require('./factory');
 
 var Seneca = require('./constructor')
@@ -29,11 +30,14 @@ function init( seneca_options, more_options ) {
 // To reference builtin loggers when defining logging options.
 init.loghandler = logging.handlers
 
+var arr = common.arrayify
 
 // Makes require('seneca').use( ... ) work by creating an on-the-fly instance.
 init.use = function() {
   var instance = init()
-  return instance.use.apply(instance,arr(arguments))
+  var args = arr(arguments)
+  console.log(args);
+  return instance.use.apply(instance, args)
 }
 
 // Mostly for testing.

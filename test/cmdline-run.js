@@ -14,7 +14,7 @@ function p0() {
   this.add('f:6',         xy('f'))
 }
 
-require('../')
-  .use(p0)
-  .add('d:4,e:5',xy('de2'))
+var plugin = require('..').use(p0)
+
+plugin.add('d:4,e:5',xy('de2'))
   .act('a:1,x:A',console.log)
