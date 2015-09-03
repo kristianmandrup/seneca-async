@@ -32,7 +32,15 @@ We should be able to create our own runner to wrap lab, such as: `lab-cli.js`
 require('lab/lib/cli').run();
 ```
 
-`node lab-cli.js -v -P test --require babel-async`
+`node lab-cli.js -v -P test --require ./babel-async`
+
+where `babel-async.js` contains or babel config that enables ES7 async functions:
+
+```js
+require('babel/register')({
+  'optional': [ 'es7.asyncFunctions' ]
+});
+```
 
 ### Babel mocha
 
