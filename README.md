@@ -18,7 +18,9 @@ Also, the original projct uses this "weird" test script, which uses [lab](https:
 
 `"test": "./node_modules/.bin/lab -v -P test"`
 
-So clearly, for the tests to work, we must use lab and not mocha as the runner...
+So clearly, for the tests to work, we must use lab as the runner with babel configured to use ES7 async functions...
+
+if we look in `node_modules` we can see that `.bin/lab` is a simple node executable
 
 ```sh
 #!/usr/bin/env node
@@ -26,7 +28,7 @@ So clearly, for the tests to work, we must use lab and not mocha as the runner..
 require('../lib/cli').run();
 ```
 
-We should be able to create our own runner to wrap lab, such as: `lab-cli.js`
+We can create our own tes runner to wrap lab, such as: `lab-cli.js`
 
 ```js
 require('lab/lib/cli').run();
