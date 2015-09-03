@@ -20,6 +20,20 @@ Also, the original projct uses this "weird" test script, which uses [lab](https:
 
 So clearly, for the tests to work, we must use lab and not mocha as the runner...
 
+```sh
+#!/usr/bin/env node
+
+require('../lib/cli').run();
+```
+
+We should be able to create our own runner to wrap lab, such as: `lab-cli.js`
+
+```js
+require('lab/lib/cli').run();
+```
+
+`node lab-cli.js -v -P test --require babel-async`
+
 ### Babel mocha
 
 See https://github.com/bmancini55/babel-mocha-test

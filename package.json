@@ -8,7 +8,8 @@
     "src"
   ],
   "scripts": {
-    "test": "mocha --require mocha-babel-async",
+    "test": "mocha --require babel-async",
+    "lab-test": "node --require ./babel-async lab-cli.js -v -P test",
     "test-browser": "gulp test-browser",
     "build": "gulp build",
     "coverage": "gulp coverage"
