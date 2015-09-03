@@ -36,7 +36,7 @@ var arr = common.arrayify
 init.use = function() {
   var instance = init()
   var args = arr(arguments)
-  console.log(args);
+  console.log('USE', args);
   return instance.use.apply(instance, args)
 }
 
