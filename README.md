@@ -14,29 +14,32 @@ http://derpturkey.com/testing-asyncawait-with-babel-and-mocha/
 
 At this point I have taken the liberty to move most of the tests into the `temp` folder. Make the first test pass (ie. `test/common.test.js`) then move each test one at a time into `test` folder and make each one pass before moving on. When all tests pass, seneca-async should be fully functional with async/await! Welcome to the future!!!
 
-Also, the original projct uses this "weird" test script, which uses [lab](https://www.npmjs.com/package/lab)
+The Seneca project uses [lab](https://www.npmjs.com/package/lab) as the test runner.
+
+`npm test` runs the `test` script as configured in `package.json`:
 
 `"test": "./node_modules/.bin/lab -v -P test"`
 
-So clearly, for the tests to work, we must use lab as the runner with babel configured to use ES7 async functions...
+For the tests to work, we must use `lab` as the test runner, but using babel configured to use ES7 async functions...
 
-if we look in `node_modules` we can see that `.bin/lab` is a simple node executable
+If we look in `node_modules` we can see that `.bin/lab` is a simple node executable
 
 ```sh
 #!/usr/bin/env node
-
 require('../lib/cli').run();
 ```
 
-We can create our own tes runner to wrap lab, such as: `lab-cli.js`
+We can create our own custom test runner to wrap `lab`, such as: `lab-cli.js`
 
 ```js
 require('lab/lib/cli').run();
 ```
 
+Which can be run like this, using `--require` to activate babel with async configuration!
+
 `node lab-cli.js -v -P test --require ./babel-async`
 
-where `babel-async.js` contains or babel config that enables ES7 async functions:
+where `babel-async.js` contains our babel configuration that enables ES7 async functions:
 
 ```js
 require('babel/register')({
