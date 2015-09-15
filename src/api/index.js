@@ -18,7 +18,7 @@ module.exports = function(root) {
     },
     list: require('./list'),
     listen: require('./listen'),
-    log_route: require('./log_route'),
+    logroute: require('./log_route')(root),
     make: require('./make'),
     options: require('./options')(root),
     pin: require('./pin')(root),
