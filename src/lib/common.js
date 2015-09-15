@@ -1,39 +1,57 @@
 /* Copyright (c) 2010-2015 Richard Rodger, MIT License */
 /* jshint node:true, asi:true, eqnull:true */
-'use strict';
+"use strict";
 
-var util = require('util');
-var _   = require('lodash');
-var nid = require('nid');
 
-module.exports.tagnid = nid({length:3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
+var util = require('util')
 
-function arrayify() {
-  return Array.prototype.slice.call(arguments[0],arguments[1])
-}
 
-module.exports.arrayify = arrayify
+var _   = require('lodash')
+var nid = require('nid')
 
-module.exports.delegate = function( scope, func ) {
+
+exports.tagnid = nid({length:3,alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'})
+
+
+function arrayify(){ return Array.prototype.slice.call(arguments[0],arguments[1]) }
+exports.arrayify = arrayify
+
+
+
+exports.delegate = function( scope, func ) {
   var args = Array.prototype.slice.call(arguments,2)
   return function() {
     return func.apply(scope,args.concat(Array.prototype.slice.call(arguments)))
   }
 }
 
-module.exports.noop = function noop() {
+
+exports.noop = function noop() {
   // does nothing
 }
 
-// TODO: are any of the below used?
-var conf = module.exports.conf = {}
 
-var die = module.exports.die = function(msg) {
+
+
+// TODO: are any of the below used?
+
+
+
+var conf = exports.conf = {}
+
+
+
+
+
+var die = exports.die = function(msg) {
   console.error(msg)
   process.exit(1)
 }
 
-var copydata = module.exports.copydata = function(obj) {
+
+
+
+var copydata = exports.copydata = function(obj) {
   var copy
 
   // Handle the 3 simple types, and null or undefined
@@ -68,7 +86,7 @@ var copydata = module.exports.copydata = function(obj) {
 }
 
 
-module.exports.argpattern = function argpattern( args ) {
+exports.argpattern = function argpattern( args ) {
   args = args || {}
   var sb = []
   _.each( args, function(v,k){
@@ -82,14 +100,18 @@ module.exports.argpattern = function argpattern( args ) {
   return sb.join(',')
 }
 
-// noop for callbacks
-module.exports.nil = function nil(){
+
+
+  // noop for callbacks
+exports.nil = function nil(){
   _.each(arguments,function(arg){
     if( _.isFunction(arg) ) {
       return arg()
     }
   })
 }
+
+
 
 // remove any props containing $
 function clean(obj) {
@@ -105,7 +127,9 @@ function clean(obj) {
   }
   return out
 }
-module.exports.clean = clean
+exports.clean = clean
+
+
 
 function deepextend() {
   var args = arrayify(arguments)
@@ -116,7 +140,8 @@ function deepextend() {
 
   return out
 }
-module.exports.deepextend = deepextend
+exports.deepextend = deepextend
+
 
 // TODO: can still fail if objects are too deeply complex
 // need a finite bound on recursion
@@ -181,31 +206,38 @@ function deepextend_impl(tar) {
   return tar
 }
 
+
 // loop over a list of items recursively
 // list can be an integer - number of times to recurse
-module.exports.recurse = async function recurse(list,work) {
+exports.recurse = function recurse(list,work,done) {
   /* jshint validthis:true */
-  try {
-    var ctxt = this
 
-    if( _.isNumber(list) ) {
-      var size = list
-      list = new Array(size)
-      for(var i = 0; i < size; i++){
-        list[i]=i
-      }
+  var ctxt = this
+
+  if( _.isNumber(list) ) {
+    var size = list
+    list = new Array(size)
+    for(var i = 0; i < size; i++){
+      list[i]=i
+    }
+  }
+  else {
+    list = _.clone(list)
+  }
+
+  function next(err,out){
+    if( err ) return done(err,out);
+
+    var item = list.shift()
+
+    if( void 0 !== item ) {
+      work.call(ctxt,item,next)
     }
     else {
-      list = _.clone(list)
+      done.call(ctxt,err,out)
     }
-
-    // Removed old style next, done pattern
-    while (item = list.shift()) {
-      await work.call(ctxt, item)
-    }
-  } catch (err) {
-    return err;
   }
+  next.call(ctxt)
 }
 
 
@@ -215,7 +247,7 @@ module.exports.recurse = async function recurse(list,work) {
 // fixed: map of fixed values - cannot be overriden
 // omits: array of prop names to exclude
 // defaults, args, and fixed are deepextended together in that order
-module.exports.argprops = function argprops( defaults, args, fixed, omits){
+exports.argprops = function argprops( defaults, args, fixed, omits){
   omits = _.isArray(omits) ? omits :
     _.isObject(omits) ? _.keys(omits) :
     _.isString(omits) ? omits.split(/\s*,\s*/) :
@@ -230,7 +262,8 @@ module.exports.argprops = function argprops( defaults, args, fixed, omits){
   return _.omit( deepextend( defaults, usedargs, fixed ), omits )
 }
 
-module.exports.print = function print(err, out){
+
+exports.print = function print(err,out){
   if(err) throw err;
 
   console.log(util.inspect(out,{depth:null}))

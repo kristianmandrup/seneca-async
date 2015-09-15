@@ -8,17 +8,17 @@ Senaca using ES7 async functions
 Development
 -----------
 
-Run `npm test` and start debugging... ;)
+Run `npm run lab-test` and start debugging... ;)
 
 http://derpturkey.com/testing-asyncawait-with-babel-and-mocha/
 
-At this point I have taken the liberty to move most of the tests into the `temp` folder. Make the first test pass (ie. `test/common.test.js`) then move each test one at a time into `test` folder and make each one pass before moving on. When all tests pass, seneca-async should be fully functional with async/await! Welcome to the future!!!
+I have taken the liberty to move most of the tests into the `temp` folder. Make the first test pass (ie. `test/common.test.js`) then move each test one at a time into `test` folder and make each one pass before moving on. When all tests pass, seneca-async should be fully functional with async/await! Welcome to the future!!!
 
 The Seneca project uses [lab](https://www.npmjs.com/package/lab) as the test runner.
 
-`npm test` runs the `test` script as configured in `package.json`:
+`npm run lab-test` runs the `lab-test` script as configured in `package.json`:
 
-`"test": "./node_modules/.bin/lab -v -P test"`
+`"lab-test": "node --require ./babel-async lab-cli.js -v -P test"`
 
 For the tests to work, we must use `lab` as the test runner, but using babel configured to use ES7 async functions...
 
@@ -29,7 +29,7 @@ If we look in `node_modules` we can see that `.bin/lab` is a simple node executa
 require('../lib/cli').run();
 ```
 
-We can create our own custom test runner to wrap `lab`, such as: `lab-cli.js`
+We have created our own custom test runner to wrap `lab`, called: `lab-cli.js`
 
 ```js
 require('lab/lib/cli').run();
@@ -49,6 +49,8 @@ require('babel/register')({
 
 ### Babel mocha
 
+In the future it would be nice to rewrite a test suite using [Mocha]().
+
 See https://github.com/bmancini55/babel-mocha-test
 
 ```js
@@ -63,15 +65,4 @@ require('babel/register')({
     "test": "mocha --require mocha-babel"
   }
 }
-```
-
-Looks like npm test uses the npm `"main"` entry to see where to pick up the tests? If I change it to point to `dist/seneca.js`. If I change it to `"main": "src/seneca.js"` it seems to work. Please feel free to fix this using a better way! The `"main"` entry is also used for exporting the compiled distribution file on inclusion of the package!
-
-```sh
-Error: Cannot find module './seneca/init'
-    at Function.Module._resolveFilename (module.js:336:15)
-    at Function.Module._load (module.js:286:25)
-    at Module.require (module.js:365:17)
-    at require (module.js:384:17)
-    at /Users/kristianmandrup/repos/test123/senaca-projects/seneca-async/dist/seneca.js:18:13
 ```

@@ -4,6 +4,7 @@
 
 var assert   = require('assert')
 var lab      = exports.lab = require('lab').script()
+const seneca   = require('..')
 
 // var seneca = require('../dist/seneca')
 // var lib = seneca.lib

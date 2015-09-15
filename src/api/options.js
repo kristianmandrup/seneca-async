@@ -8,7 +8,7 @@ module.exports = function(root) {
     var self = this
 
     if( null != options ) {
-      self.log.debug( 'options', 'set', options, callpoint() )
+      self.log.debug( 'options', 'set', options)
     }
 
     so = private$.exports.options =( (null == options) ?

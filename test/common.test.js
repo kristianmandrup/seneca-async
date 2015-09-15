@@ -1,19 +1,19 @@
 /* Copyright (c) 2014 Richard Rodger, MIT License */
-"use strict";
-
+/*jslint node: true */
+'use strict';
 
 // mocha common.test.js
 import 'mochawait';
 
-var util = require('util')
-var assert = require('assert')
+var util = require('util');
+var assert = require('assert');
 
-var Lab = require('lab')
+var Lab = require('lab');
 
 // var seneca = require('../dist/seneca')
 // var lib = seneca.lib
 // var common = lib.common;
-var common = require('../src/lib/common')
+var common = require('../src/lib/common');
 
 var lab      = exports.lab = Lab.script()
 var describe = lab.describe
